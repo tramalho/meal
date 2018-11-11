@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import br.com.tramalho.meal.R
+import br.com.tramalho.meal.utilities.doObserve
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -15,11 +16,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel.dataReceived.observe(this, Observer {
+        viewModel.dataReceived.doObserve(this, Observer {
             Toast.makeText(this@MainActivity, "${it.size}", Toast.LENGTH_SHORT).show();
         })
 
-        viewModel.error.observe(this, Observer {
+        viewModel.error.doObserve(this, Observer {
             Toast.makeText(this@MainActivity, "Algo deu errado", Toast.LENGTH_SHORT).show();
         })
 

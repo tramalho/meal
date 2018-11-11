@@ -39,7 +39,7 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
 }
 
 @MainThread
-fun <T> SingleLiveEvent<T>.observe(owner: LifecycleOwner, observer: Observer<T>) {
+fun <T> SingleLiveEvent<T>.doObserve(owner: LifecycleOwner, observer: Observer<T>) {
 
     if (hasActiveObservers()) {
         Log.w(javaClass.canonicalName, "Multiple observers registered but only one will be notified of changes.")
