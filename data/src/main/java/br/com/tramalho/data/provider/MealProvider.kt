@@ -3,7 +3,7 @@ package br.com.tramalho.data.provider
 import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.response.MealCategoryResponse
 import br.com.tramalho.data.infraestructure.*
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
 class MealProvider(private val service: MealService) {

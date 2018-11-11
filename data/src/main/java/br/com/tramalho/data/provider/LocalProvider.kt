@@ -62,7 +62,7 @@ class LocalProvider(private val context: Context) {
 
     private fun getListAdapterType() = Types.newParameterizedType(List::class.java, Object::class.java)
 
-    private fun getJsonFromPref(key: String) = with(getPref()) { getString(key, "") }
+    private fun getJsonFromPref(key: String): String = with(getPref()) { getString(key, "")!! }
 
     private fun getPref() = context.getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE)
 

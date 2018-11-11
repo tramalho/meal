@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import br.com.tramalho.meal.R
-import br.com.tramalho.meal.utilities.observe
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +23,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "Algo deu errado", Toast.LENGTH_SHORT).show();
         })
 
-        viewModel.start(this)
+        viewModel.start()
     }
 }

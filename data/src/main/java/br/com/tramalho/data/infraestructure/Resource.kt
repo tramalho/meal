@@ -4,7 +4,7 @@ sealed class Resource<out T>()
 class Success<out T>(val data: T) : Resource<T>()
 class Failure(val data: Error) : Resource<Nothing>()
 
-fun <T> Resource<T>.handle(actOnSuccess: Success<T>.() -> Unit, actOnFailure: Failure.() -> Unit) {
+fun <T> Resource<T>.handle(actOnSuccess: Success<T>.() -> Unit, actOnFailure: Failure.() -> Unit = {}) {
 
     when (this) {
         is Success -> actOnSuccess()

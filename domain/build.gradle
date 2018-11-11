@@ -2,11 +2,11 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -20,13 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    kotlin {
-        experimental {
-            coroutines "enable"
-        }
-    }
-
 }
 
 dependencies {
@@ -35,6 +28,7 @@ dependencies {
     api project(":data")
 
     testImplementation 'junit:junit:4.12'
+    testImplementation 'io.mockk:mockk:1.8.12.kotlin13'
 
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'

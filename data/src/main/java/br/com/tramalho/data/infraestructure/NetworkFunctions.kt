@@ -1,9 +1,9 @@
 package br.com.tramalho.data.infraestructure
 
 import android.util.Log
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import retrofit2.Response
 
 fun <T> callAsync(block: () -> Deferred<Response<T>>) = GlobalScope.async {

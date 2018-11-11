@@ -20,12 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    kotlin {
-        experimental {
-            coroutines "enable"
-        }
-    }
 }
 
 dependencies {
@@ -34,8 +28,7 @@ dependencies {
 
     implementation project(":domain")
 
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
