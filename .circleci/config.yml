@@ -32,6 +32,10 @@ jobs:
           name: Test
           command: ./gradlew clean check build assembleAndroidTest
 
+      - run:
+          name: Run Linters
+          command: ./gradlew check --stacktrace
+
       - save_cache:
           paths:
             - ~/.gradle

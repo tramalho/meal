@@ -17,6 +17,9 @@ class MealProvider(private val service: MealService) {
 
     suspend fun fetchMealByCategory(category: String): List<Meal> {
         delay(TimeUnit.SECONDS.toMillis(10))
+        category.apply {
+
+        }
         return emptyList()
     }
 }
