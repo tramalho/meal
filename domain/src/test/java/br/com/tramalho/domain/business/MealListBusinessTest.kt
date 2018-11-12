@@ -1,7 +1,9 @@
 package br.com.tramalho.domain.business
 
+import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.MealCategory
 import br.com.tramalho.data.entity.meal.response.MealCategoryResponse
+import br.com.tramalho.data.entity.meal.response.MealResponse
 import br.com.tramalho.data.infraestructure.Failure
 import br.com.tramalho.data.infraestructure.Success
 import br.com.tramalho.data.infraestructure.handle
@@ -28,6 +30,8 @@ class MealListBusinessTest {
 
     private val mealCategory: MealCategory = MealCategory(CATEGORY)
 
+    private val meal = Meal(MEAL, MEAL, MEAL)
+
     @Before
     fun setup() {
         MockKAnnotations.init(this)
@@ -39,7 +43,7 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf(mealCategory)
 
-        val fetchMealsCategories = business.fetchMealsCategories()
+        val fetchMealsCategories = business.fetchCategories()
 
         fetchMealsCategories.handle({ assertEquals(mealCategory, data[0]) })
     }
@@ -51,7 +55,7 @@ class MealListBusinessTest {
 
         coEvery { mealProvider.fetchCategories().await() } returns Success(MealCategoryResponse(listOf(mealCategory)))
 
-        val fetchMealsCategories = business.fetchMealsCategories()
+        val fetchMealsCategories = business.fetchCategories()
 
         coVerify { localProvider.saveCategories(any()) }
 
@@ -66,14 +70,58 @@ class MealListBusinessTest {
 
         coEvery { mealProvider.fetchCategories().await() } returns Failure(Error(CATEGORY))
 
-        val fetchMealsCategories = business.fetchMealsCategories()
+        val fetchMealsCategories = business.fetchCategories()
 
         verify(exactly = 0) { localProvider.saveCategories(any()) }
 
-        fetchMealsCategories.handle({ fail("not execute") }, { assertEquals(CATEGORY, data.message) })
+        fetchMealsCategories.handle({ fail() }, { assertEquals(CATEGORY, data.message) })
+    }
+
+    @Test
+    fun shouldBeRetrieveCatAndMeal() = runBlocking {
+
+        every { localProvider.fetchCategories() } returns listOf(mealCategory)
+
+        coEvery { mealProvider.fetchMealByCategory(any()).await() } returns Success(MealResponse(listOf(meal)))
+
+        val fetchMealsCategories = business.fetchMealsAndCategories()
+
+        fetchMealsCategories.handle({
+            assertEquals(meal, data.meals[0])
+            assertEquals(mealCategory, data.categories[0])
+        })
+    }
+
+    @Test
+    fun shouldBeRetrieveErrorCatAndMeal() = runBlocking {
+
+        every { localProvider.fetchCategories() } returns listOf()
+
+        coEvery { mealProvider.fetchCategories().await() } returns Failure(Error(MEAL))
+
+        val fetchMealsCategories = business.fetchMealsAndCategories()
+
+        fetchMealsCategories.handle({ fail()}, { assertEquals(MEAL, data.message) })
+
+        coVerify(exactly = 0) { mealProvider.fetchMealByCategory(any()).await() }
+    }
+
+    @Test
+    fun shouldBeRetrieveErrorWhenFetchMealByCategory() = runBlocking {
+
+        every { localProvider.fetchCategories() } returns listOf(mealCategory)
+
+        coEvery { mealProvider.fetchMealByCategory(any()).await() } returns Failure(Error(MEAL))
+
+        val fetchMealsCategories = business.fetchMealsAndCategories()
+
+        fetchMealsCategories.handle({ fail()}, { assertEquals(MEAL, data.message) })
+
+        coVerify { mealProvider.fetchMealByCategory(any()).await() }
     }
 
     companion object {
         const val CATEGORY: String = "CATEGORY"
+        const val MEAL: String = "MEAL"
     }
 }
