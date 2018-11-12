@@ -17,11 +17,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModel.dataReceived.doObserve(this, Observer {
-            Toast.makeText(this@MainActivity, "${it.size}", Toast.LENGTH_SHORT).show();
+
+            var cat = ""
+
+            it.forEach {
+                cat+= "\n ${it.strCategory}"
+            }
+
+            Toast.makeText(this@MainActivity, cat, Toast.LENGTH_SHORT).show()
         })
 
         viewModel.error.doObserve(this, Observer {
-            Toast.makeText(this@MainActivity, "Algo deu errado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this@MainActivity, "Algo deu errado", Toast.LENGTH_SHORT).show()
         })
 
         viewModel.start()
