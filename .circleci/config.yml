@@ -37,11 +37,11 @@ jobs:
           command: ./gradlew check --stacktrace
 
       - store_artifacts:
-          path: app/build/reports
+          path: */build/reports
           destination: reports
 
       - store_test_results:
-          path: app/build/test-results
+          path: */build/test-results
 
       - save_cache:
           paths:
