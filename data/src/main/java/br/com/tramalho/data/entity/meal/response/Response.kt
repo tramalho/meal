@@ -6,7 +6,3 @@ import br.com.tramalho.data.entity.meal.MealCategory
 data class MealCategoryResponse(val categories : List<MealCategory>)
 
 data class MealResponse(val meals : List<Meal>)
-
-data class MealsAndCategories(val meals : List<Meal>, val categories : List<MealCategory>)
-
-

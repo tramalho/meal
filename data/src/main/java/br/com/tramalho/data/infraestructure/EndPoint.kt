@@ -13,5 +13,4 @@ interface MealService {
 
     @GET("filter.php")
     fun getMealsByCategory(@Query("c") category : String): Deferred<Response<MealResponse>>
-
 }
