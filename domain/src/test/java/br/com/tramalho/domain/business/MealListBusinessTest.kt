@@ -4,6 +4,7 @@ import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.MealCategory
 import br.com.tramalho.data.entity.meal.response.MealCategoryResponse
 import br.com.tramalho.data.entity.meal.response.MealResponse
+import br.com.tramalho.data.infraestructure.DataNotAvailable
 import br.com.tramalho.data.infraestructure.Failure
 import br.com.tramalho.data.infraestructure.Success
 import br.com.tramalho.data.infraestructure.handle
@@ -28,7 +29,7 @@ class MealListBusinessTest {
     @MockK(relaxUnitFun = true)
     private lateinit var mealProvider: MealProvider
 
-    private val mealCategory: MealCategory = MealCategory(CATEGORY)
+    private val mealCategory: MealCategory = MealCategory(CATEGORY, CATEGORY, CATEGORY)
 
     private val meal = Meal(MEAL, MEAL, MEAL)
 
@@ -64,7 +65,7 @@ class MealListBusinessTest {
 
 
     @Test
-    fun shouldBeError() = runBlocking {
+    fun shouldBeErrorFromRemote() = runBlocking {
 
         every { localProvider.fetchCategories() } returns listOf()
 
@@ -75,6 +76,20 @@ class MealListBusinessTest {
         verify(exactly = 0) { localProvider.saveCategories(any()) }
 
         fetchMealsCategories.handle({ fail() }, { assertEquals(CATEGORY, data.message) })
+    }
+
+    @Test
+    fun shouldBeErrorDataNotAvailable() = runBlocking {
+
+        every { localProvider.fetchCategories() } returns listOf()
+
+        coEvery { mealProvider.fetchCategories().await() } returns Success(MealCategoryResponse(listOf()))
+
+        val fetchMealsCategories = business.fetchCategories()
+
+        verify(exactly = 0) { localProvider.saveCategories(any()) }
+
+        fetchMealsCategories.handle({ fail()}, { assertEquals(DataNotAvailable().javaClass, this.state.javaClass) })
     }
 
     @Test
@@ -115,7 +130,7 @@ class MealListBusinessTest {
 
         val fetchMealsCategories = business.fetchMealsAndCategories()
 
-        fetchMealsCategories.handle({ fail()}, { assertEquals(MEAL, data.message) })
+        fetchMealsCategories.handle({ fail()}, { assertEquals(DataNotAvailable().javaClass, this.state.javaClass) })
 
         coVerify { mealProvider.fetchMealByCategory(any()).await() }
     }

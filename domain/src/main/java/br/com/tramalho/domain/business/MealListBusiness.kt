@@ -2,7 +2,8 @@ package br.com.tramalho.domain.business
 
 import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.MealCategory
-import br.com.tramalho.data.entity.meal.response.MealsAndCategories
+import br.com.tramalho.data.entity.meal.MealsAndCategories
+import br.com.tramalho.data.entity.meal.response.MealCategoryResponse
 import br.com.tramalho.data.infraestructure.Failure
 import br.com.tramalho.data.infraestructure.Resource
 import br.com.tramalho.data.infraestructure.Success
@@ -13,7 +14,8 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
 
     suspend fun fetchCategories(): Resource<List<MealCategory>> {
 
-        var categories = localProvider.fetchCategories()
+        val categories = localProvider.fetchCategories()
+
         var result: Resource<List<MealCategory>> = Success(categories)
 
         if (categories.isEmpty()) {
@@ -22,9 +24,7 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
 
             when (response) {
                 is Success -> {
-                    categories = response.data.categories
-                    localProvider.saveCategories(categories)
-                    result = Success(categories)
+                    result = configCategoryResponse(response)
                 }
                 is Failure ->
                     result = Failure(response.data)
@@ -32,6 +32,19 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
         }
 
         return result
+    }
+
+    private fun configCategoryResponse(response: Success<MealCategoryResponse>): Resource<List<MealCategory>> {
+
+        val categories = response.data.categories
+
+        return when (categories.isNullOrEmpty()) {
+            true -> Failure(Error())
+            false -> {
+                localProvider.saveCategories(response.data.categories)
+                Success(response.data.categories)
+            }
+        }
     }
 
 
@@ -50,7 +63,7 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
         val catResource = fetchCategories()
 
         if (catResource is Failure) {
-            return Failure(catResource.data)
+            return catResource
         }
 
         val categoryList = (catResource as Success).data
