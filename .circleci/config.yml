@@ -36,16 +36,12 @@ jobs:
           name: Run Linters
           command: ./gradlew check --stacktrace
 
-      - run:
-          name: Save test results
-          command: |
-            mkdir -p ~/junit/
-            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
-          when: always
-      - store_test_results:
-          path: ~/junit
       - store_artifacts:
-          path: ~/junit
+          path: app/build/reports
+          destination: reports
+
+      - store_test_results:
+          path: app/build/test-results
 
       - save_cache:
           paths:
