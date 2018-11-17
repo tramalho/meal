@@ -1,6 +1,7 @@
 package br.com.tramalho.meal.presentation
 
 import androidx.lifecycle.ViewModel
+import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.MealCategory
 import br.com.tramalho.data.entity.meal.MealsAndCategories
 import br.com.tramalho.data.infraestructure.Failure
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class MealViewModel(private val mealListBusiness: MealListBusiness) : ViewModel() {
 
-    val dataReceived: SingleLiveEvent<List<MealCategory>> = SingleLiveEvent()
+    val dataReceived: SingleLiveEvent<List<Meal>> = SingleLiveEvent()
     val error: SingleLiveEvent<State> = SingleLiveEvent()
 
     private lateinit var categories: Iterator<MealCategory>
@@ -34,7 +35,7 @@ class MealViewModel(private val mealListBusiness: MealListBusiness) : ViewModel(
     private fun success(): Success<MealsAndCategories>.() -> Unit = {
         categories = this.data.categories.iterator()
         categories.takeIf { categories.hasNext() }.apply { categories.next() }
-        dataReceived.value = this.data.categories
+        dataReceived.value = this.data.meals
     }
 
 
@@ -44,5 +45,13 @@ class MealViewModel(private val mealListBusiness: MealListBusiness) : ViewModel(
             val mealCategory = categories.next()
             mealListBusiness.fetchMealsByCategory(mealCategory.strCategory)
         }
+    }
+
+    fun changeCategory() : Boolean{
+        val value = dataReceived.value
+        val lastMeal = value?.last()
+        val beforeLastMeal = value?.get(value.lastIndex-1)
+
+        return lastMeal?.category != beforeLastMeal?.category
     }
 }

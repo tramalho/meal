@@ -1,3 +1,3 @@
 package br.com.tramalho.data.entity.meal
 
-data class Meal(val strMeal : String, val strMealThumb : String, val idMeal : String)
+data class Meal(val strMeal : String, val strMealThumb : String, val idMeal : String, var category : String = "")

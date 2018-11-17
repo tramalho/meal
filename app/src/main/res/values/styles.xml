@@ -21,5 +21,12 @@
         <item name="android:layout_marginEnd">@dimen/card_margin</item>
         <item name="android:layout_marginRight">@dimen/card_margin</item>
     </style>
+    
+    <style name="favorite_icon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:contentDescription">@string/app_name</item>
+    </style>
 
 </resources>
