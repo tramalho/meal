@@ -1,23 +1,25 @@
 package br.com.tramalho.meal.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.meal.R
+import br.com.tramalho.meal.databinding.MealItemCardBinding
 import br.com.tramalho.meal.presentation.MealsAdapter.MealViewHandler
-import kotlinx.android.synthetic.main.meal_item_card.view.*
 
 
 class MealsAdapter(val meals : ArrayList<Meal>) : RecyclerView.Adapter<MealViewHandler>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHandler {
 
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.meal_item_card, parent, false)
+        val layoutInflater = LayoutInflater.from(parent.context)
 
-        return MealViewHandler(view)
+        val itemBinding = DataBindingUtil.inflate<MealItemCardBinding>(layoutInflater,
+            R.layout.meal_item_card, parent, false)
+
+        return MealViewHandler(itemBinding)
     }
 
     override fun getItemCount() = meals.size
@@ -25,10 +27,11 @@ class MealsAdapter(val meals : ArrayList<Meal>) : RecyclerView.Adapter<MealViewH
     override fun onBindViewHolder(holder: MealViewHandler, position: Int) = holder.bind(meals[position])
 
 
-    class MealViewHandler(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MealViewHandler(val binding: MealItemCardBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(meal : Meal) {
-            itemView.mealItemTitle.text = meal.strMeal
+            binding.item = meal
+            binding.executePendingBindings()
         }
     }
 }
