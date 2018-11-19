@@ -53,9 +53,14 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
         val response = mealProvider.fetchMealByCategory(category).await()
 
         return when (response) {
-            is Success -> Success(response.data.meals)
+            is Success -> Success(mergeCategoryAndMeal(category, response.data.meals))
             is Failure -> Failure(response.data)
         }
+    }
+
+    private fun mergeCategoryAndMeal(category: String, meals: List<Meal>): List<Meal> {
+        meals.forEach { it.category = category }
+        return meals
     }
 
     suspend fun fetchMealsAndCategories(): Resource<MealsAndCategories> {
