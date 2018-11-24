@@ -23,7 +23,7 @@
                 android:id="@+id/mealsResyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="@{viewModel.listVisibility}"/>
+                android:visibility="@{safeUnbox(viewModel.listVisibility)}"/>
 
         <ImageView
                 android:id="@+id/animation"
@@ -34,7 +34,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:visibility="@{viewModel.loading}"
+                android:visibility="@{safeUnbox(viewModel.loading)}"
                 android:contentDescription="@string/app_name"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
