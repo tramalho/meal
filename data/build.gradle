@@ -37,8 +37,6 @@ dependencies {
 
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
 
-    api "androidx.paging:paging-runtime:$android_paging_version"
-
     // Koin for Android
     api "org.koin:koin-android:$koin_android_version"
     // Android Scope feature - AndroidX

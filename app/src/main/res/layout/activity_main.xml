@@ -1,17 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+
+<layout
+
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".presentation.MainActivity">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+>
 
+    <data>
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mealsResyclerView"
+        <variable
+                name="viewModel"
+                type="br.com.tramalho.meal.presentation.MealViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            
-    />
-    
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="match_parent"
+            tools:context=".presentation.MainActivity">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mealsResyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.listVisibility}"/>
+
+        <ImageView
+                android:id="@+id/animation"
+                android:layout_width="@dimen/loading_size"
+                android:layout_height="@dimen/loading_size"
+                app:srcCompat="@drawable/avd_loading"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="@{viewModel.loading}"
+                android:contentDescription="@string/app_name"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

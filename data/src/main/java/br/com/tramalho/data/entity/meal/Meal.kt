@@ -5,5 +5,8 @@ data class Meal(
     val strMealThumb: String,
     val idMeal: String,
     var category: String = "",
-    var favorite: Boolean = false
+    var favorite: Boolean = false,
+    var type : Int = 1
 )
+
+
