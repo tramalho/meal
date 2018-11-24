@@ -1,15 +1,13 @@
 package br.com.tramalho.domain.business
 
-import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.MealCategory
 import br.com.tramalho.data.entity.meal.response.MealCategoryResponse
 import br.com.tramalho.data.entity.meal.response.MealResponse
-import br.com.tramalho.data.infraestructure.DataNotAvailable
-import br.com.tramalho.data.infraestructure.Failure
-import br.com.tramalho.data.infraestructure.Success
-import br.com.tramalho.data.infraestructure.handle
+import br.com.tramalho.data.infraestructure.*
 import br.com.tramalho.data.provider.LocalProvider
 import br.com.tramalho.data.provider.MealProvider
+import br.com.tramalho.data.infraestructure.DataMock.Companion.CATEGORY
+import br.com.tramalho.data.infraestructure.DataMock.Companion.MEAL
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.runBlocking
@@ -29,9 +27,9 @@ class MealListBusinessTest {
     @MockK(relaxUnitFun = true)
     private lateinit var mealProvider: MealProvider
 
-    private val mealCategory: MealCategory = MealCategory(CATEGORY, CATEGORY, CATEGORY)
+    private val mealCategory: MealCategory = DataMock.createCategory()
 
-    private val meal = Meal(MEAL, MEAL, MEAL)
+    private val meal = DataMock.createMeal()
 
     @Before
     fun setup() {
@@ -54,7 +52,9 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { mealProvider.fetchCategories().await() } returns Success(MealCategoryResponse(listOf(mealCategory)))
+        coEvery { mealProvider.fetchCategories().await() } returns Success(
+            MealCategoryResponse(listOf(mealCategory))
+        )
 
         val fetchMealsCategories = business.fetchCategories()
 
@@ -69,7 +69,11 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { mealProvider.fetchCategories().await() } returns Failure(Error(CATEGORY))
+        coEvery { mealProvider.fetchCategories().await() } returns Failure(
+            Error(
+                CATEGORY
+            )
+        )
 
         val fetchMealsCategories = business.fetchCategories()
 
@@ -83,13 +87,15 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { mealProvider.fetchCategories().await() } returns Success(MealCategoryResponse(listOf()))
+        coEvery { mealProvider.fetchCategories().await() } returns Success(
+            MealCategoryResponse(listOf())
+        )
 
         val fetchMealsCategories = business.fetchCategories()
 
         verify(exactly = 0) { localProvider.saveCategories(any()) }
 
-        fetchMealsCategories.handle({ fail()}, { assertEquals(DataNotAvailable().javaClass, this.state.javaClass) })
+        fetchMealsCategories.handle({ fail() }, { assertEquals(DataNotAvailable().javaClass, this.state.javaClass) })
     }
 
     @Test
@@ -97,7 +103,9 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf(mealCategory)
 
-        coEvery { mealProvider.fetchMealByCategory(any()).await() } returns Success(MealResponse(listOf(meal)))
+        coEvery { mealProvider.fetchMealByCategory(any()).await() } returns Success(
+            MealResponse(listOf(meal))
+        )
 
         val fetchMealsCategories = business.fetchMealsAndCategories()
 
@@ -112,11 +120,15 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { mealProvider.fetchCategories().await() } returns Failure(Error(MEAL))
+        coEvery { mealProvider.fetchCategories().await() } returns Failure(
+            Error(
+                MEAL
+            )
+        )
 
         val fetchMealsCategories = business.fetchMealsAndCategories()
 
-        fetchMealsCategories.handle({ fail()}, { assertEquals(MEAL, data.message) })
+        fetchMealsCategories.handle({ fail() }, { assertEquals(MEAL, data.message) })
 
         coVerify(exactly = 0) { mealProvider.fetchMealByCategory(any()).await() }
     }
@@ -126,17 +138,14 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf(mealCategory)
 
-        coEvery { mealProvider.fetchMealByCategory(any()).await() } returns Failure(Error(MEAL))
+        coEvery { mealProvider.fetchMealByCategory(any()).await() } returns Failure(
+            Error(MEAL)
+        )
 
         val fetchMealsCategories = business.fetchMealsAndCategories()
 
-        fetchMealsCategories.handle({ fail()}, { assertEquals(DataNotAvailable().javaClass, this.state.javaClass) })
+        fetchMealsCategories.handle({ fail() }, { assertEquals(DataNotAvailable().javaClass, this.state.javaClass) })
 
         coVerify { mealProvider.fetchMealByCategory(any()).await() }
-    }
-
-    companion object {
-        const val CATEGORY: String = "CATEGORY"
-        const val MEAL: String = "MEAL"
     }
 }

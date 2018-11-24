@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.meal.R
 import br.com.tramalho.meal.databinding.MealItemCardBinding
+import br.com.tramalho.meal.presentation.ListStatus.Companion.HEADER
 import br.com.tramalho.meal.presentation.MealsAdapter.MealViewHandler
 
 
@@ -25,6 +26,8 @@ class MealsAdapter(val meals : ArrayList<Meal>) : RecyclerView.Adapter<MealViewH
     override fun getItemCount() = meals.size
 
     override fun onBindViewHolder(holder: MealViewHandler, position: Int) = holder.bind(meals[position])
+
+    override fun getItemViewType(position: Int) = meals[position].type
 
 
     class MealViewHandler(val binding: MealItemCardBinding) : RecyclerView.ViewHolder(binding.root) {
