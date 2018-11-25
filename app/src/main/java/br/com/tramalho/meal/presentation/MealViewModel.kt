@@ -32,9 +32,6 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutin
     fun start() {
 
         GlobalScope.launch(coroutineContext) {
-            //delay be here only to show de loading
-            delay(TimeUnit.SECONDS.toMillis(3))
-
             val resource = mealListBusiness.fetchMealsAndCategories()
             resource.handle(success(), failure())
         }

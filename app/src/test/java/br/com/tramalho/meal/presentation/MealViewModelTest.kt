@@ -57,7 +57,7 @@ class MealViewModelTest {
 
         viewModel.start()
 
-        verify { observerSuccess.onChanged(mAc.meals) }
+        verify(exactly = 1) { observerSuccess.onChanged(mAc.meals) }
     }
 
     @Test
@@ -68,7 +68,7 @@ class MealViewModelTest {
 
         viewModel.start()
 
-        verify { observerError.onChanged(any()) }
+        verify(exactly = 1) { observerError.onChanged(any()) }
     }
 
     @Test
