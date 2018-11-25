@@ -14,13 +14,15 @@ import br.com.tramalho.meal.presentation.ListStatus.Companion.ITEM
 import br.com.tramalho.meal.utilities.SingleLiveEvent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutineContext: CoroutineDispatcher = UI) :
     ViewModel() {
 
     val dataReceived: SingleLiveEvent<List<Meal>> = SingleLiveEvent()
-    val error: SingleLiveEvent<State> = SingleLiveEvent()
+    val error: SingleLiveEvent<NetworkState> = SingleLiveEvent()
 
     val listVisibility = MutableLiveData<Int>().apply { value = GONE }
     val loading = MutableLiveData<Int>().apply { value = VISIBLE }
@@ -30,6 +32,9 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutin
     fun start() {
 
         GlobalScope.launch(coroutineContext) {
+            //delay be here only to show de loading
+            delay(TimeUnit.SECONDS.toMillis(3))
+
             val resource = mealListBusiness.fetchMealsAndCategories()
             resource.handle(success(), failure())
         }
@@ -47,7 +52,7 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutin
     }
 
     private fun failure(): Failure.() -> Unit = {
-        error.value = this.state
+        error.value = this.networkState
         configVisibility(ViewState.ERROR)
     }
 
@@ -107,5 +112,5 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutin
         val emptyView: Int = GONE
     )
 
-    private enum class ViewState { SUCCESS, ERROR, LOADING, NO_DATA }
+
 }

@@ -15,6 +15,7 @@ import br.com.tramalho.meal.presentation.ListStatus.Companion.HEADER
 import br.com.tramalho.meal.utilities.doObserve
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.math.BigDecimal
 
 class MainActivity : AppCompatActivity() {
 
@@ -55,28 +56,19 @@ class MainActivity : AppCompatActivity() {
         })
 
         mealsResyclerView.loadMore { viewModel.fetchMeals() }
-
-        val avd = AnimatedVectorDrawableCompat.create(this, R.drawable.avd_loading)
-        val iv = animation.apply {
-            setImageDrawable(avd)
-        }
-        avd?.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
-            override fun onAnimationEnd(drawable: Drawable?) {
-                iv.post { avd.start() }
-            }
-        })
-        avd?.start()
     }
 
     private inner class SpanSizeLookup : GridLayoutManager.SpanSizeLookup() {
+        private val spanValue = 2
+
         override fun getSpanSize(position: Int): Int {
 
             val adapter = mealsResyclerView.adapter
 
             return when {
-                position == 0 -> 2
-                adapter?.getItemViewType(position) == HEADER -> 2
-                else -> 1
+                position == BigDecimal.ONE.toInt() -> spanValue
+                adapter?.getItemViewType(position) == HEADER -> spanValue
+                else -> BigDecimal.ONE.toInt()
             }
         }
     }

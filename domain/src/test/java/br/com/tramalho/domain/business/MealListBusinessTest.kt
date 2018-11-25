@@ -95,7 +95,7 @@ class MealListBusinessTest {
 
         verify(exactly = 0) { localProvider.saveCategories(any()) }
 
-        fetchMealsCategories.handle({ fail() }, { assertEquals(DataNotAvailable().javaClass, this.state.javaClass) })
+        fetchMealsCategories.handle({ fail() }, { assertEquals(DataNotAvailable().javaClass, this.networkState.javaClass) })
     }
 
     @Test
@@ -144,7 +144,7 @@ class MealListBusinessTest {
 
         val fetchMealsCategories = business.fetchMealsAndCategories()
 
-        fetchMealsCategories.handle({ fail() }, { assertEquals(DataNotAvailable().javaClass, this.state.javaClass) })
+        fetchMealsCategories.handle({ fail() }, { assertEquals(DataNotAvailable().javaClass, this.networkState.javaClass) })
 
         coVerify { mealProvider.fetchMealByCategory(any()).await() }
     }

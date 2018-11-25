@@ -1,4 +1,4 @@
-package br.com.tramalho.meal
+package br.com.tramalho.meal.presentation
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
@@ -31,7 +31,7 @@ class MealViewModelTest {
     private lateinit var observerSuccess: Observer<List<Meal>>
 
     @MockK(relaxUnitFun = true)
-    private lateinit var observerError: Observer<State>
+    private lateinit var observerError: Observer<NetworkState>
 
     private val mAc = DataMock.createMealAndCategory()
 
