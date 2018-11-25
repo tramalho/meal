@@ -25,8 +25,8 @@
                 android:layout_height="wrap_content"
                 android:visibility="@{safeUnbox(viewModel.listVisibility)}"/>
 
-        <ImageView
-                android:id="@+id/animation"
+        <br.com.tramalho.meal.presentation.VectorDrawableLoading
+                android:id="@+id/vectorLoading"
                 android:layout_width="@dimen/loading_size"
                 android:layout_height="@dimen/loading_size"
                 app:srcCompat="@drawable/avd_loading"
