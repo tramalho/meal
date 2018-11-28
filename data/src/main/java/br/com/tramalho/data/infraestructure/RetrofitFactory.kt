@@ -9,17 +9,15 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitFactory {
 
-    private const val BASE_URL = "https://www.themealdb.com/api/json/v1/1/"
-    private const val TIMEOUT: Long = 5
+    private val TIMEOUT: Long = 5
 
-    fun makeMealService(): MealService {
+    fun makeServiceBuilder(baseUrl: String): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .client(logInterceptor())
             .build()
-            .create(MealService::class.java)
     }
 
     private fun logInterceptor(): OkHttpClient {

@@ -1,4 +1,4 @@
-package br.com.tramalho.meal.di
+package br.com.tramalho.data.di
 
 import br.com.tramalho.data.provider.LocalProvider
 import br.com.tramalho.data.provider.MealProvider
