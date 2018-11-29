@@ -24,9 +24,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'cr
         xml.destination file("${report}/report.xml")
     }
 
-    def javaClasses = []
     def kotlinClasses = []
-    def javaSrc = []
     def kotlinSrc = []
     def execution = []
 
@@ -34,29 +32,28 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'cr
                       '**/*Test*.*', 'android/**/*.*', '**/di/*.*']
 
     rootProject.subprojects.each { proj ->
-        javaClasses << fileTree(dir: "$proj.buildDir/intermediates/classes/debug", excludes: fileFilter)
         kotlinClasses << fileTree(dir: "$proj.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-        javaSrc << "$proj.projectDir/src/main/java"
-        kotlinSrc << "$proj.projectDir/src/main/kotlin"
+        kotlinSrc << "$proj.projectDir/src/main/java"
         execution << fileTree(dir: proj.buildDir,
-                includes: ['jacoco/testDebugUnitTest.exec',
-                           'outputs/code-coverage/connected/*coverage.ec'])
+                includes: ['jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'])
     }
 
-    sourceDirectories = files([javaSrc, kotlinSrc])
-    classDirectories = files([javaClasses, kotlinClasses])
+    sourceDirectories = files(kotlinSrc)
+    classDirectories = files(kotlinClasses)
 
     executionData = files(execution)
 
     doLast() {
-        print "file://${reports.html.destination}/index.html"
+        print "file://${report}/index.html"
     }
 }
 
 coveralls {
+
     def kotlinSrc = []
+
     rootProject.subprojects.each { proj ->
-        kotlinSrc << "$proj.projectDir/src/main/kotlin"
+        kotlinSrc << "$proj.projectDir/src/main/java"
     }
 
     sourceDirs = files(kotlinSrc).files.absolutePath
