@@ -1,12 +1,16 @@
 apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
 
 jacoco {
-    toolVersion = "$jacocoVersion"
+    toolVersion = "$jacoco_version"
 }
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
+
+def report = "${rootProject.buildDir}/coverage-report"
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'createDebugCoverageReport'*/]) {
 
@@ -16,7 +20,8 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'cr
     reports {
         xml.enabled = true
         html.enabled = true
-        html.destination file("${rootProject.buildDir}/coverage-report")
+        xml.destination file(report)
+        xml.destination file("${report}/report.xml")
     }
 
     def javaClasses = []
@@ -29,11 +34,11 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'cr
                       '**/*Test*.*', 'android/**/*.*', '**/di/*.*']
 
     rootProject.subprojects.each { proj ->
-        javaClasses   << fileTree(dir: "$proj.buildDir/intermediates/classes/debug", excludes: fileFilter)
+        javaClasses << fileTree(dir: "$proj.buildDir/intermediates/classes/debug", excludes: fileFilter)
         kotlinClasses << fileTree(dir: "$proj.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-        javaSrc       << "$proj.projectDir/src/main/java"
-        kotlinSrc     << "$proj.projectDir/src/main/kotlin"
-        execution     << fileTree(dir: proj.buildDir,
+        javaSrc << "$proj.projectDir/src/main/java"
+        kotlinSrc << "$proj.projectDir/src/main/kotlin"
+        execution << fileTree(dir: proj.buildDir,
                 includes: ['jacoco/testDebugUnitTest.exec',
                            'outputs/code-coverage/connected/*coverage.ec'])
     }
@@ -41,11 +46,20 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'cr
     sourceDirectories = files([javaSrc, kotlinSrc])
     classDirectories = files([javaClasses, kotlinClasses])
 
-    print execution
-
     executionData = files(execution)
 
     doLast() {
         print "file://${reports.html.destination}/index.html"
     }
+}
+
+coveralls {
+    def kotlinSrc = []
+    rootProject.subprojects.each { proj ->
+        kotlinSrc << "$proj.projectDir/src/main/kotlin"
+    }
+
+    sourceDirs = files(kotlinSrc).files.absolutePath
+    print sourceDirs
+    jacocoReportPath = "${report}/report.xml"
 }
