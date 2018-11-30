@@ -10,7 +10,7 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
-def report = "${rootProject.buildDir}/coverage-report"
+def report = "${rootProject.buildDir}/result_report"
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'createDebugCoverageReport'*/]) {
 
@@ -20,6 +20,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'cr
     reports {
         xml.enabled = true
         html.enabled = true
+        html.destination file(report)
         xml.destination file(report)
         xml.destination file("${report}/report.xml")
     }
@@ -34,8 +35,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest'/*, 'cr
     rootProject.subprojects.each { proj ->
         kotlinClasses << fileTree(dir: "$proj.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
         kotlinSrc << "$proj.projectDir/src/main/java"
-        execution << fileTree(dir: proj.buildDir,
-                includes: ['jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'])
+        execution << fileTree(dir: proj.buildDir, includes: ['**/*.exec' , '**/*.ec'])
     }
 
     sourceDirectories = files(kotlinSrc)
