@@ -63,10 +63,8 @@ jobs:
                     --timeout 30m
 
        - run:
-            name: Install gsutil dependency and copy test results data
-            command: |
-                sudo pip install -U crcmod
-                sudo gsutil -m cp -r -U `sudo gsutil ls gs://test-lab-987-654 | tail -1` ${CIRCLE_ARTIFACTS}/ | true
+          name: Install gsutil dependency and copy test results data
+          command:  sudo gsutil -m cp -r -U `sudo gsutil ls gs://test-lab-987-654 | tail -1` ${CIRCLE_ARTIFACTS}/ | true
           no_output_timeout: 30m
       - store_artifacts:
           path: app/build/reports
