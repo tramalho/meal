@@ -26,9 +26,7 @@ jobs:
           command: ./gradlew coveralls --stacktrace
       - run:
           name: Assemble APKs
-          command: |
-          ./gradlew assembleDebug
-          ./gradlew assembleDebugAndroidTest
+          command: ./gradlew  assembleDebug assembleDebugAndroidTest
       - run:
           name: Dump Google Cloud Credentials to file
           command: echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
