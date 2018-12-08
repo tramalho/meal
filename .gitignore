@@ -8,3 +8,4 @@
 .externalNativeBuild
 */jacoco.exec
 
+/gcp_key.json

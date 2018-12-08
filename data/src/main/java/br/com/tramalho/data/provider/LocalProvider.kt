@@ -8,9 +8,9 @@ import com.squareup.moshi.Types
 import java.lang.reflect.ParameterizedType
 
 
-class LocalProvider(private val context: Context) {
+open class LocalProvider(private val context: Context) {
 
-    fun fetchCategories(): List<MealCategory> {
+    open fun fetchCategories(): List<MealCategory> {
 
         val fromJson : ArrayList<MealCategory> = ArrayList()
 
@@ -32,7 +32,7 @@ class LocalProvider(private val context: Context) {
     }
 
 
-    fun saveCategories(categories: List<MealCategory>) {
+    open fun saveCategories(categories: List<MealCategory>) {
 
         val type = getListAdapterType()
 

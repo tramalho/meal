@@ -19,6 +19,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        com.android.ddmlib.DdmPreferences.setTimeOut(60000)
         vectorDrawables.useSupportLibrary = true
 
     }
@@ -39,6 +40,15 @@ android {
 
     dataBinding {
         enabled = true
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        animationsDisabled true
+
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 }
 
@@ -76,5 +86,7 @@ dependencies {
 
     androidTestImplementation "io.mockk:mockk-android:1.8.12.kotlin13"
 
+    androidTestImplementation 'androidx.test:runner:1.1.0'
 
+    androidTestUtil 'androidx.test:orchestrator:1.1.0'
 }

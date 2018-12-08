@@ -20,7 +20,7 @@
             tools:context=".presentation.MainActivity">
 
         <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/mealsResyclerView"
+                android:id="@+id/mealRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="@{safeUnbox(viewModel.listVisibility)}"/>

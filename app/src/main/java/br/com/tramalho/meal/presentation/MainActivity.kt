@@ -1,14 +1,11 @@
 package br.com.tramalho.meal.presentation
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.vectordrawable.graphics.drawable.Animatable2Compat
-import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import br.com.tramalho.meal.R
 import br.com.tramalho.meal.databinding.ActivityMainBinding
 import br.com.tramalho.meal.presentation.ListStatus.Companion.HEADER
@@ -35,9 +32,9 @@ class MainActivity : AppCompatActivity() {
 
         gridLayoutManager.spanSizeLookup = SpanSizeLookup()
 
-        mealsResyclerView.layoutManager = gridLayoutManager
+        mealRecyclerView.layoutManager = gridLayoutManager
 
-        mealsResyclerView.adapter = MealsAdapter(arrayListOf())
+        mealRecyclerView.adapter = MealsAdapter(arrayListOf())
 
         setupListeners()
 
@@ -46,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         viewModel.dataReceived.doObserve(this, Observer {
-            val mealsAdapter = mealsResyclerView.adapter as MealsAdapter
+            val mealsAdapter = mealRecyclerView.adapter as MealsAdapter
             mealsAdapter.meals.addAll(it)
             mealsAdapter.notifyDataSetChanged()
         })
@@ -55,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "Algo deu errado", Toast.LENGTH_SHORT).show()
         })
 
-        mealsResyclerView.loadMore { viewModel.fetchMeals() }
+        mealRecyclerView.loadMore { viewModel.fetchMeals() }
     }
 
     private inner class SpanSizeLookup : GridLayoutManager.SpanSizeLookup() {
@@ -63,10 +60,10 @@ class MainActivity : AppCompatActivity() {
 
         override fun getSpanSize(position: Int): Int {
 
-            val adapter = mealsResyclerView.adapter
+            val adapter = mealRecyclerView.adapter
 
             return when {
-                position == BigDecimal.ONE.toInt() -> spanValue
+                position == BigDecimal.ZERO.toInt() -> spanValue
                 adapter?.getItemViewType(position) == HEADER -> spanValue
                 else -> BigDecimal.ONE.toInt()
             }
