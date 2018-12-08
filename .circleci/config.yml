@@ -38,7 +38,7 @@ jobs:
           echo 'export TEST_APK_PATH=`find "." "-path" "*Test*.apk" -print -quit`' >> $BASH_ENV
     - run:
         name: Run UI Tests
-        command: gcloud firebase test android run --type instrumentation --app ${APK_PATH} --test ${TEST_APK_PATH} --device-ids Nexus6,hammerhead,sailfish --os-version-ids 16,27 --timeout 30m
+        command: gcloud firebase test android run --type instrumentation --app ${APK_PATH} --test ${TEST_APK_PATH} --device-ids Nexus6,hammerhead,sailfish --os-version-ids 19,27 --timeout 30m
         no_output_timeout: 30m
     - store_artifacts:
         path: app/build/reports
