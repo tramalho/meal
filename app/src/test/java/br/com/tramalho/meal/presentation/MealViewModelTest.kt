@@ -8,7 +8,6 @@ import br.com.tramalho.data.infraestructure.*
 import br.com.tramalho.data.infraestructure.DataMock.Companion.CATEGORY
 import br.com.tramalho.domain.business.MealListBusiness
 import br.com.tramalho.meal.data.infraestructure.UI
-import br.com.tramalho.meal.presentation.MealViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,7 +18,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestRule
 
 
 class MealViewModelTest {
@@ -40,7 +38,7 @@ class MealViewModelTest {
     private lateinit var viewModel : MealViewModel
 
     @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule()
+    var rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @ExperimentalCoroutinesApi
     @Before
