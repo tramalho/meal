@@ -4,6 +4,7 @@ import android.app.Application
 import br.com.tramalho.data.di.networkModule
 import br.com.tramalho.data.di.provideModule
 import br.com.tramalho.data.di.serviceModule
+import br.com.tramalho.data.di.systemModule
 import br.com.tramalho.meal.di.*
 import org.koin.android.ext.android.startKoin
 
@@ -18,7 +19,8 @@ class MealApplication : Application() {
                 businessModule,
                 provideModule,
                 serviceModule,
-                networkModule
+                networkModule,
+                systemModule
             )
         )
     }

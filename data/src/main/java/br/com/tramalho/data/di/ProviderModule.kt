@@ -6,7 +6,7 @@ import org.koin.dsl.module.module
 
 val provideModule = module {
 
-    factory { LocalProvider(get()) }
+    factory { LocalProvider(get(), get()) }
 
     factory { MealProvider(get()) }
 }

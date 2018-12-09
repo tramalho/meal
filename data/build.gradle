@@ -51,6 +51,8 @@ dependencies {
     api "org.koin:koin-androidx-scope:$koin_android_version"
 
     testImplementation "junit:junit:$junit_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
+
 }
 repositories {
     mavenCentral()
