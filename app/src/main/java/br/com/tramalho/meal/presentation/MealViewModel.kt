@@ -6,7 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.MealCategory
 import br.com.tramalho.data.entity.meal.MealsAndCategories
-import br.com.tramalho.data.infraestructure.*
+import br.com.tramalho.data.infraestructure.Failure
+import br.com.tramalho.data.infraestructure.Success
+import br.com.tramalho.data.infraestructure.UI
+import br.com.tramalho.data.infraestructure.handle
 import br.com.tramalho.domain.business.MealListBusiness
 import br.com.tramalho.meal.presentation.ListStatus.Companion.HEADER
 import br.com.tramalho.meal.presentation.ListStatus.Companion.ITEM
@@ -45,12 +48,12 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, application:
 
     private fun success(): Success<MealsAndCategories>.() -> Unit = {
 
-        val result = this.data.categories
+        val result = this.data.meals
 
         when (result.isNotEmpty()) {
 
             true -> {
-                categories = result.iterator()
+                categories = this.data.categories.iterator()
                 categories.next()
 
                 configureType(data.meals)
@@ -80,11 +83,14 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, application:
 
     private fun configureType(data: List<Meal>) {
 
-        data.forEach { it.type = ITEM }
+        if(data.isNotEmpty()) {
 
-        val first = data.first()
-        val last = dataReceived.value?.last()
-        last.takeIf { last?.category != first.category }.apply { first.type = HEADER }
+            data.forEach { it.type = ITEM }
+
+            val first = data.first()
+            val last = dataReceived.value?.last()
+            last.takeIf { last?.category != first.category }.apply { first.type = HEADER }
+        }
     }
 
     override fun tryAgain() {

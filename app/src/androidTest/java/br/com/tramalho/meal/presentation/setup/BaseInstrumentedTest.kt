@@ -2,8 +2,8 @@ package br.com.tramalho.meal.presentation.setup
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import br.com.tramalho.data.provider.LocalProvider
 import br.com.tramalho.data.di.mockWebServerNeworkModule
+import br.com.tramalho.data.provider.LocalProvider
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import okhttp3.mockwebserver.MockResponse
@@ -16,6 +16,7 @@ import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext
 import org.koin.test.KoinTest
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 @RunWith(AndroidJUnit4::class)
@@ -45,11 +46,16 @@ abstract class BaseInstrumentedTest : KoinTest {
         mockWebServer.shutdown()
     }
 
-    fun setupSuccessMock(pathMock: String) {
-
+    fun setupMockWebServer(pathMock: String, delay: Long = 1, statusCode : Int = 200) {
         val json = openFile(pathMock)
+        val mockResponse = MockResponse()
 
-        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(json))
+        mockResponse
+            .setResponseCode(statusCode)
+            .setBody(json)
+            .throttleBody(Long.MAX_VALUE, delay, TimeUnit.MILLISECONDS)
+
+        mockWebServer.enqueue(mockResponse)
     }
 
     private fun openFile(pathFile: String): String? {

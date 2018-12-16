@@ -15,7 +15,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <ImageView android:layout_width="@dimen/error_img_size"
+        <ImageView
+                   android:id="@+id/imageStatus"
+                   android:layout_width="@dimen/error_img_size"
                    android:layout_height="@dimen/error_img_size"
                    android:src="@{sharedViewModel.statusImage, default =@drawable/ic_artichoke}"
                    app:layout_constraintEnd_toEndOf="parent"
