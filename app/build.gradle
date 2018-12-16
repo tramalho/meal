@@ -44,6 +44,7 @@ android {
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
         animationsDisabled true
+        unitTests.returnDefaultValues = true
 
         unitTests {
             includeAndroidResources = true
@@ -73,9 +74,9 @@ dependencies {
     testImplementation 'io.mockk:mockk:1.8.12.kotlin13'
     testImplementation 'android.arch.core:core-testing:1.1.1'
 
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation "androidx.test.espresso:espresso-core:${espresso_version}"
 
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    androidTestImplementation "androidx.test.espresso:espresso-intents:${espresso_version}"
 
     androidTestImplementation "androidx.test.ext:junit:1.0.0"
 
@@ -85,7 +86,7 @@ dependencies {
 
     androidTestImplementation "io.mockk:mockk-android:1.8.12.kotlin13"
 
-    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation "androidx.test:runner:${test_runner_version}"
 
-    androidTestUtil 'androidx.test:orchestrator:1.1.0'
+    androidTestUtil "androidx.test:orchestrator:${test_runner_version}"
 }

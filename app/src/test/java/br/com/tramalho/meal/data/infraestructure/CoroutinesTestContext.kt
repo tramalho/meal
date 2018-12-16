@@ -1,7 +1,8 @@
 package br.com.tramalho.meal.data.infraestructure
 
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@kotlinx.coroutines.ExperimentalCoroutinesApi
-val UI : CoroutineDispatcher = Dispatchers.Unconfined
+@ExperimentalCoroutinesApi
+val UI = CoroutineScope(Dispatchers.Unconfined)

@@ -1,5 +1,6 @@
 package br.com.tramalho.meal.presentation
 
+import android.view.View.VISIBLE
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import br.com.tramalho.data.entity.meal.Meal
@@ -8,11 +9,8 @@ import br.com.tramalho.data.infraestructure.*
 import br.com.tramalho.data.infraestructure.DataMock.Companion.CATEGORY
 import br.com.tramalho.domain.business.MealListBusiness
 import br.com.tramalho.meal.data.infraestructure.UI
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.coVerify
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -29,7 +27,10 @@ class MealViewModelTest {
     private lateinit var observerSuccess: Observer<List<Meal>>
 
     @MockK(relaxUnitFun = true)
-    private lateinit var observerError: Observer<NetworkState>
+    private lateinit var observerError: Observer<Int>
+
+    @MockK(relaxUnitFun = true)
+    private lateinit var application: MealApplication
 
     private val mAc = DataMock.createMealAndCategory()
 
@@ -44,7 +45,8 @@ class MealViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        viewModel = MealViewModel(business, UI)
+        viewModel = MealViewModel(business, application, UI)
+        every { application.getString(any()) } returns " "
     }
 
     @Test
@@ -60,13 +62,13 @@ class MealViewModelTest {
 
     @Test
     fun shouldBeRetriveFirstAccessWithError() = runBlocking {
-        viewModel.error.observeForever(observerError)
+        viewModel.alternativePageVisibility.observeForever(observerError)
 
         coEvery { business.fetchMealsAndCategories() } returns Failure(Error(), DataNotAvailable())
 
         viewModel.start()
 
-        verify(exactly = 1) { observerError.onChanged(any()) }
+        verify(exactly = 1) { observerError.onChanged(VISIBLE) }
     }
 
     @Test
