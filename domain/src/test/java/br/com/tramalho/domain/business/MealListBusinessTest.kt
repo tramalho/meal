@@ -25,7 +25,7 @@ class MealListBusinessTest {
     private lateinit var localProvider: LocalProvider
 
     @MockK(relaxUnitFun = true)
-    private lateinit var mealProvider: MealProvider
+    private lateinit var remoteProvider: MealProvider
 
     private val mealCategory: MealCategory = DataMock.createCategory()
 
@@ -34,7 +34,7 @@ class MealListBusinessTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        business = MealListBusiness(localProvider, mealProvider)
+        business = MealListBusiness(localProvider, remoteProvider)
     }
 
     @Test
@@ -52,7 +52,7 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { mealProvider.fetchCategories().await() } returns Success(
+        coEvery { remoteProvider.fetchCategories().await() } returns Success(
             MealCategoryResponse(listOf(mealCategory))
         )
 
@@ -69,7 +69,7 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { mealProvider.fetchCategories().await() } returns Failure(
+        coEvery { remoteProvider.fetchCategories().await() } returns Failure(
             Error(
                 CATEGORY
             )
@@ -87,7 +87,7 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { mealProvider.fetchCategories().await() } returns Success(
+        coEvery { remoteProvider.fetchCategories().await() } returns Success(
             MealCategoryResponse(listOf())
         )
 
@@ -103,7 +103,7 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf(mealCategory)
 
-        coEvery { mealProvider.fetchMealByCategory(any()).await() } returns Success(
+        coEvery { remoteProvider.fetchMealByCategory(any()).await() } returns Success(
             MealResponse(listOf(meal))
         )
 
@@ -120,7 +120,7 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { mealProvider.fetchCategories().await() } returns Failure(
+        coEvery { remoteProvider.fetchCategories().await() } returns Failure(
             Error(
                 MEAL
             )
@@ -130,7 +130,7 @@ class MealListBusinessTest {
 
         fetchMealsCategories.handle({ fail() }, { assertEquals(MEAL, data.message) })
 
-        coVerify(exactly = 0) { mealProvider.fetchMealByCategory(any()).await() }
+        coVerify(exactly = 0) { remoteProvider.fetchMealByCategory(any()).await() }
     }
 
     @Test
@@ -138,7 +138,7 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf(mealCategory)
 
-        coEvery { mealProvider.fetchMealByCategory(any()).await() } returns Failure(
+        coEvery { remoteProvider.fetchMealByCategory(any()).await() } returns Failure(
             Error(MEAL)
         )
 
@@ -146,6 +146,6 @@ class MealListBusinessTest {
 
         fetchMealsCategories.handle({ fail() }, { assertEquals(DataNotAvailable().javaClass, this.networkState.javaClass) })
 
-        coVerify { mealProvider.fetchMealByCategory(any()).await() }
+        coVerify { remoteProvider.fetchMealByCategory(any()).await() }
     }
 }
