@@ -24,16 +24,18 @@ import java.util.concurrent.TimeUnit
 abstract class BaseInstrumentedTest : KoinTest {
 
     @MockK(relaxUnitFun = true)
-    protected lateinit var localProvider: LocalProvider
+    lateinit var localProvider: LocalProvider
 
-    protected var mockWebServer: MockWebServer? = null
+    lateinit var mockWebServer: MockWebServer
 
     @Before
     open fun setUp() {
 
+        mockWebServer = MockWebServer()
+
         MockKAnnotations.init(this)
 
-        mockWebServer().start(Constants.PORT)
+        mockWebServer.start(Constants.PORT)
 
         StandAloneContext.loadKoinModules(
             listOf(
@@ -44,7 +46,7 @@ abstract class BaseInstrumentedTest : KoinTest {
 
     @After
     fun tearDown() {
-        mockWebServer().shutdown()
+        mockWebServer.shutdown()
     }
 
     fun setupMockWebServer(pathMock: String, delay: Long = 1, statusCode : Int = 200) {
@@ -56,16 +58,7 @@ abstract class BaseInstrumentedTest : KoinTest {
             .setBody(json)
             .throttleBody(Long.MAX_VALUE, delay, TimeUnit.MILLISECONDS)
 
-        mockWebServer().enqueue(mockResponse)
-    }
-
-    private fun mockWebServer(): MockWebServer {
-
-        if(mockWebServer == null){
-            mockWebServer = MockWebServer()
-        }
-
-        return mockWebServer as MockWebServer
+        mockWebServer.enqueue(mockResponse)
     }
 
     private fun openFile(pathFile: String): String? {
