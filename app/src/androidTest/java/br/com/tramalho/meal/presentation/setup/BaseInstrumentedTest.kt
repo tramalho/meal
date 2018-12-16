@@ -26,13 +26,14 @@ abstract class BaseInstrumentedTest : KoinTest {
     @MockK(relaxUnitFun = true)
     protected lateinit var localProvider: LocalProvider
 
-    protected var mockWebServer: MockWebServer = MockWebServer()
+    protected var mockWebServer: MockWebServer? = null
 
     @Before
     open fun setUp() {
+
         MockKAnnotations.init(this)
 
-        mockWebServer.start(Constants.PORT)
+        mockWebServer().start(Constants.PORT)
 
         StandAloneContext.loadKoinModules(
             listOf(
@@ -43,7 +44,7 @@ abstract class BaseInstrumentedTest : KoinTest {
 
     @After
     fun tearDown() {
-        mockWebServer.shutdown()
+        mockWebServer().shutdown()
     }
 
     fun setupMockWebServer(pathMock: String, delay: Long = 1, statusCode : Int = 200) {
@@ -55,7 +56,16 @@ abstract class BaseInstrumentedTest : KoinTest {
             .setBody(json)
             .throttleBody(Long.MAX_VALUE, delay, TimeUnit.MILLISECONDS)
 
-        mockWebServer.enqueue(mockResponse)
+        mockWebServer().enqueue(mockResponse)
+    }
+
+    private fun mockWebServer(): MockWebServer {
+
+        if(mockWebServer == null){
+            mockWebServer = MockWebServer()
+        }
+
+        return mockWebServer as MockWebServer
     }
 
     private fun openFile(pathFile: String): String? {
