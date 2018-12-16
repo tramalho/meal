@@ -26,12 +26,12 @@ abstract class BaseInstrumentedTest : KoinTest {
     @MockK(relaxUnitFun = true)
     protected lateinit var localProvider: LocalProvider
 
-    protected lateinit var mockWebServer: MockWebServer
+    protected var mockWebServer: MockWebServer = MockWebServer()
 
     @Before
     open fun setUp() {
         MockKAnnotations.init(this)
-        mockWebServer = MockWebServer()
+
         mockWebServer.start(Constants.PORT)
 
         StandAloneContext.loadKoinModules(
