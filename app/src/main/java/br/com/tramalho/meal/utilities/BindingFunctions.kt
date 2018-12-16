@@ -1,6 +1,7 @@
 package br.com.tramalho.meal.utilities
 
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import br.com.tramalho.meal.R
 import com.bumptech.glide.Glide
@@ -20,4 +21,9 @@ fun loadImage(imageView: ImageView, url: String?, placeHolder: Int = R.drawable.
                 .into(imageView)
         }
     }
+}
+
+@BindingAdapter("android:src")
+fun setSrcVector(view: ImageView, @DrawableRes drawable: Int) {
+    view.setImageResource(drawable)
 }

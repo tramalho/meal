@@ -1,7 +1,6 @@
 package br.com.tramalho.meal.presentation
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -46,10 +45,6 @@ class MainActivity : AppCompatActivity() {
             val mealsAdapter = mealRecyclerView.adapter as MealsAdapter
             mealsAdapter.meals.addAll(it)
             mealsAdapter.notifyDataSetChanged()
-        })
-
-        viewModel.error.doObserve(this, Observer {
-            Toast.makeText(this@MainActivity, "Algo deu errado", Toast.LENGTH_SHORT).show()
         })
 
         mealRecyclerView.loadMore { viewModel.fetchMeals() }

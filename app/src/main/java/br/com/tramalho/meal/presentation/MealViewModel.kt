@@ -1,45 +1,39 @@
 package br.com.tramalho.meal.presentation
 
+import android.app.Application
 import android.view.View.GONE
-import android.view.View.VISIBLE
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.MealCategory
 import br.com.tramalho.data.entity.meal.MealsAndCategories
-import br.com.tramalho.data.infraestructure.*
+import br.com.tramalho.data.infraestructure.Failure
+import br.com.tramalho.data.infraestructure.Success
+import br.com.tramalho.data.infraestructure.UI
+import br.com.tramalho.data.infraestructure.handle
 import br.com.tramalho.domain.business.MealListBusiness
 import br.com.tramalho.meal.presentation.ListStatus.Companion.HEADER
 import br.com.tramalho.meal.presentation.ListStatus.Companion.ITEM
 import br.com.tramalho.meal.utilities.SingleLiveEvent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
-class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutineContext: CoroutineDispatcher = UI) :
-    ViewModel() {
+class MealViewModel(private val mealListBusiness: MealListBusiness, application: Application, protected val coroutineScope: CoroutineScope = UI) : BaseViewModel(application) {
 
     val dataReceived: SingleLiveEvent<List<Meal>> = SingleLiveEvent()
-    val error: SingleLiveEvent<NetworkState> = SingleLiveEvent()
-
     val listVisibility = MutableLiveData<Int>().apply { value = GONE }
-    val loading = MutableLiveData<Int>().apply { value = VISIBLE }
 
     private var categories: Iterator<MealCategory> = listOf<MealCategory>().iterator()
 
     fun start() {
-
-        GlobalScope.launch(coroutineContext) {
+        configVisibility(ViewState.LOADING)
+        coroutineScope.launch {
             val resource = mealListBusiness.fetchMealsAndCategories()
             resource.handle(success(), failure())
         }
     }
 
     fun fetchMeals() {
-
-        GlobalScope.launch(coroutineContext) {
+        coroutineScope.launch() {
             if (categories.hasNext()) {
                 val mealCategory = categories.next()
                 mealListBusiness.fetchMealsByCategory(mealCategory.strCategory)
@@ -49,18 +43,17 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutin
     }
 
     private fun failure(): Failure.() -> Unit = {
-        error.value = this.networkState
         configVisibility(ViewState.ERROR)
     }
 
     private fun success(): Success<MealsAndCategories>.() -> Unit = {
 
-        val result = this.data.categories
+        val result = this.data.meals
 
         when (result.isNotEmpty()) {
 
             true -> {
-                categories = result.iterator()
+                categories = this.data.categories.iterator()
                 categories.next()
 
                 configureType(data.meals)
@@ -73,17 +66,12 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutin
         }
     }
 
-    private fun configVisibility(viewState: ViewState) {
+    override fun configVisibility(viewState: ViewState) {
 
-        val result = when (viewState) {
-            ViewState.LOADING -> Status(VISIBLE, GONE)
-            ViewState.SUCCESS -> Status(GONE, VISIBLE)
-            ViewState.ERROR -> Status(GONE, GONE, VISIBLE)
-            ViewState.NO_DATA -> Status(GONE, GONE, GONE, VISIBLE)
-        }
+        super.configVisibility(viewState)
+        val result = setupViewState(viewState)
 
-        loading.value = result.loading
-        listVisibility.value = result.list
+        listVisibility.value = result.showData
     }
 
     private fun mealSucess(): Success<List<Meal>>.() -> Unit {
@@ -95,19 +83,17 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, val coroutin
 
     private fun configureType(data: List<Meal>) {
 
-        data.forEach { it.type = ITEM }
+        if(data.isNotEmpty()) {
 
-        val first = data.first()
-        val last = dataReceived.value?.last()
-        last.takeIf { last?.category != first.category }.apply { first.type = HEADER }
+            data.forEach { it.type = ITEM }
+
+            val first = data.first()
+            val last = dataReceived.value?.last()
+            last.takeIf { last?.category != first.category }.apply { first.type = HEADER }
+        }
     }
 
-    private data class Status(
-        val loading: Int,
-        val list: Int,
-        val errorView: Int = GONE,
-        val emptyView: Int = GONE
-    )
-
-
+    override fun tryAgain() {
+        start()
+    }
 }

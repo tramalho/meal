@@ -27,7 +27,7 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
                     result = configCategoryResponse(response)
                 }
                 is Failure ->
-                    result = Failure(response.data)
+                    result = Failure(response.data, response.networkState)
             }
         }
 
@@ -54,7 +54,7 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
 
         return when (response) {
             is Success -> Success(mergeCategoryAndMeal(category, response.data.meals))
-            is Failure -> Failure(response.data)
+            is Failure -> Failure(response.data, response.networkState)
         }
     }
 
@@ -77,7 +77,7 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
 
         return when (response) {
             is Success -> Success(MealsAndCategories(response.data, categoryList))
-            is Failure -> Failure(response.data)
+            is Failure -> Failure(response.data, response.networkState)
         }
     }
 
