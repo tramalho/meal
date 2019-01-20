@@ -5,9 +5,11 @@ import br.com.tramalho.data.provider.MealDetailProvider
 import br.com.tramalho.data.provider.MealProvider
 import org.koin.dsl.module.module
 
-val provideModule = module {
+val provideModule = module(override = true) {
 
-    factory { LocalProvider(get(), get()) }
+    factory {
+        LocalProvider(get(), get("Default"))
+    }
 
     factory { MealProvider(get()) }
 

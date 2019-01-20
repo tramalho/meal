@@ -5,5 +5,8 @@
         no botão abaixo para tentar novamente
     </string>
     <string name="empty_msg_try_again">Parece que não existem dados para a consulta realizada, por favor clique
-        no botão abaixo para tentar novamente</string>
+        no botão abaixo para tentar novamente
+    </string>
+
+    <string name="step">Passo %1$s</string>
 </resources>

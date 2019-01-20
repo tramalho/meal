@@ -1,11 +1,11 @@
 package br.com.tramalho.data.provider
 
 import br.com.tramalho.data.entity.meal.response.MealDetailResponse
-import br.com.tramalho.data.infraestructure.MealDetailAdapter
-import org.junit.Test
+import br.com.tramalho.data.infraestructure.MealDetailJsonAdapter
 import com.squareup.moshi.Moshi
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Test
 
 
 class MealDetailAdapterTest {
@@ -13,12 +13,13 @@ class MealDetailAdapterTest {
     private val fullJson = "{\n" +
             "  \"meals\": [\n" +
             "    {\n" +
-            "      \"idMeal\": \"52819\",\n" +
-            "      \"strMeal\": \"Cajun spiced fish tacos\",\n" +
-            "      \"strCategory\": \"Seafood\",\n" +
-            "      \"strArea\": \"Mexican\",\n" +
-            "      \"strInstructions\": \"\",\n" +
-            "      \"strMealThumb\": \"http\",\n" +
+            "      \"idMeal\": \"52776\",\n" +
+            "      \"strMeal\": \"Chocolate Gateau\",\n" +
+            "      \"strCategory\": \"Desert\",\n" +
+            "      \"strArea\": \"French\",\n" +
+            "      \"strInstructions\": \"abc\\ncde\",\n" +
+            "      \"strMealThumb\": \"\",\n" +
+            "      \"strTags\": \" \",\n" +
             "      \"strYoutube\": \"strYoutube\",\n" +
             "      \"strIngredient1\": \"cajun\",\n" +
             "      \"strIngredient20\": \"onion\",\n" +
@@ -37,7 +38,7 @@ class MealDetailAdapterTest {
     @Before
     fun setUp(){
         moshi = Moshi.Builder()
-            .add(MealDetailAdapter())
+            .add(MealDetailJsonAdapter())
             .build()
     }
 
@@ -67,6 +68,8 @@ class MealDetailAdapterTest {
 
         assertEquals("strMeasure1", measures?.get(0))
         assertEquals("strMeasure2", measures?.get(measures.size-1))
+
+        assertEquals("cde", mealDetail?.strInstructions!![1])
     }
     @Test
     fun shouldBeReturnEmptyMealDetail() {

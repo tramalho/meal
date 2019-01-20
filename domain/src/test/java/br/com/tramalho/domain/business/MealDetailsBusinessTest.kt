@@ -32,11 +32,11 @@ class MealDetailsBusinessTest {
     @Test
     fun shouldReturnSuccess() = runBlocking {
 
-        coEvery { remoteProvider.fetchDetailById("").await() } returns Success(
+        coEvery { remoteProvider.fetchDetailById("123").await() } returns Success(
             MealDetailResponse(listOf(successResult))
         )
 
-        val remoteResult = business.fetchDetails("")
+        val remoteResult = business.fetchDetails("123")
 
         remoteResult.handle({ assertEquals(successResult, data) }, { fail() })
 
@@ -44,9 +44,9 @@ class MealDetailsBusinessTest {
 
     @Test
     fun shouldReturnFailure() = runBlocking {
-        coEvery { remoteProvider.fetchDetailById("").await() } returns Failure(Error(ID_MEAL), UnexpectedError())
+        coEvery { remoteProvider.fetchDetailById("123").await() } returns Failure(Error(ID_MEAL), UnexpectedError())
 
-        val remoteResult = business.fetchDetails("")
+        val remoteResult = business.fetchDetails("123")
 
         remoteResult.handle({ fail() },
             {

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+                name="sharedViewModel"
+                type="br.com.tramalho.meal.presentation.BaseViewModel"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <br.com.tramalho.meal.presentation.VectorDrawableLoading
+                android:id="@+id/vectorLoading"
+                android:layout_width="@dimen/loading_size"
+                android:layout_height="@dimen/loading_size"
+                app:srcCompat="@drawable/avd_loading"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="@{safeUnbox(sharedViewModel.loading), default = visible}"
+                android:contentDescription="@string/app_name"/>
+
+        <include
+                layout="@layout/error_layout"
+                app:sharedViewModel="@{sharedViewModel}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

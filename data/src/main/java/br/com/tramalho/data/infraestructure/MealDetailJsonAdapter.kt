@@ -3,12 +3,12 @@ package br.com.tramalho.data.infraestructure
 import br.com.tramalho.data.entity.meal.MealDetail
 import com.squareup.moshi.*
 
-class MealDetailAdapter() : JsonAdapter<MealDetail>() {
+class MealDetailJsonAdapter() : JsonAdapter<MealDetail>() {
 
     companion object {
         val UNIQUE_FIELDS = JsonReader.Options.of(
             "idMeal", "strMeal", "strCategory", "strArea",
-            "strInstructions", "strTags", "strYoutube", "strSource", "dateModified"
+            "strInstructions", "strMealThumb", "strTags", "strYoutube", "strSource", "dateModified"
         )
 
         val INGREDIENTS = JsonReader.Options.of(*Array(20) { "strIngredient${1 + it}" })
@@ -25,7 +25,7 @@ class MealDetailAdapter() : JsonAdapter<MealDetail>() {
     override fun fromJson(reader: JsonReader): MealDetail {
 
         //fill array with empty strings always unique fields should be value
-        val uniqueFieldsParsed = Array(9) { " " }
+        val uniqueFieldsParsed = Array(10) { " " }
 
         val ingredients = ArrayList<String>()
 
@@ -85,10 +85,18 @@ class MealDetailAdapter() : JsonAdapter<MealDetail>() {
 
         return MealDetail(
             iterator.next(), iterator.next(), iterator.next(),
+            iterator.next(), createInstrunctions(iterator.next()), iterator.next(),
             iterator.next(), iterator.next(), iterator.next(),
-            iterator.next(), iterator.next(), iterator.next(),
-            ingredients,
-            measures
+            iterator.next(), ingredients, measures
         )
+    }
+
+    private fun createInstrunctions(value: String): List<String> {
+
+        val scape = arrayListOf("\r", "\n")
+
+        return value.split("\n")
+            .filter { !it.isEmpty() && !scape.contains(it) }
+            .map { it.replace("\r", "") }
     }
 }

@@ -2,7 +2,7 @@ package br.com.tramalho.meal.presentation.setup
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import br.com.tramalho.data.di.mockWebServerNeworkModule
+import br.com.tramalho.data.di.mockURLModule
 import br.com.tramalho.data.provider.LocalProvider
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
@@ -28,6 +28,11 @@ abstract class BaseInstrumentedTest : KoinTest {
 
     lateinit var mockWebServer: MockWebServer
 
+/*
+    @get:Rule
+    val instantRule = InstantTaskExecutorRule()
+*/
+
     @Before
     open fun setUp() {
 
@@ -39,8 +44,9 @@ abstract class BaseInstrumentedTest : KoinTest {
 
         StandAloneContext.loadKoinModules(
             listOf(
-                mockWebServerNeworkModule,
-                mockLocalProviderModule())
+                mockLocalProviderModule(),
+                mockURLModule
+            )
         )
     }
 
@@ -49,7 +55,7 @@ abstract class BaseInstrumentedTest : KoinTest {
         mockWebServer.shutdown()
     }
 
-    fun setupMockWebServer(pathMock: String, delay: Long = 1, statusCode : Int = 200) {
+    fun setupMockWebServer(pathMock: String, delay: Long = 1, statusCode: Int = 200) {
         val json = openFile(pathMock)
         val mockResponse = MockResponse()
 
@@ -79,10 +85,8 @@ abstract class BaseInstrumentedTest : KoinTest {
 
     private fun mockLocalProviderModule(): Module {
 
-        return module {
-            factory(override = true) {
-                localProvider
-            }
+        return module(override = true) {
+            factory { localProvider }
         }
     }
 }

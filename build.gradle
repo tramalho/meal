@@ -17,6 +17,10 @@ buildscript {
     ext.moshi_version = '1.8.0'
     ext.espresso_version = '3.1.1'
     ext.test_runner_version = '1.1.1'
+    ext.nav_version = "1.0.0-alpha09"
+    ext.constraint_version = "2.0.0-alpha3"
+    ext.support_legacy_version = "1.0.0"
+
 
     repositories {
         google()

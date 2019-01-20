@@ -1,12 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="AppTheme.Detail" parent="AppTheme.Base" />
+    <style name="AppTheme.Home" parent="AppTheme.Base" />
 
     <style name="meal_card_title">
         <item name="android:textColor">@android:color/white</item>
@@ -27,6 +30,11 @@
         <item name="android:layout_height">24dp</item>
         <item name="android:layout_margin">16dp</item>
         <item name="android:contentDescription">@string/app_name</item>
+    </style>
+
+    <style name="exp_toolbar_title" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">0sp</item>
+        <item name="android:textColor">@android:color/transparent</item>
     </style>
 
 </resources>
