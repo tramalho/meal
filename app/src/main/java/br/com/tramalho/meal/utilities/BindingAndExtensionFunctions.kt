@@ -6,6 +6,8 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.tramalho.meal.R
 import br.com.tramalho.meal.presentation.EndlessRecyclerOnScrollListener
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 
 @BindingAdapter(value = arrayOf("imageUrl", "placeholder"), requireAll = false)
