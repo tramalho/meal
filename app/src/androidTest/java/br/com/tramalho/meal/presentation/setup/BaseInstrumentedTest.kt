@@ -52,7 +52,9 @@ abstract class BaseInstrumentedTest : KoinTest {
 
     @After
     fun tearDown() {
-        mockWebServer.shutdown()
+        if(::mockWebServer.isInitialized){
+            mockWebServer.shutdown()
+        }
     }
 
     fun setupMockWebServer(pathMock: String, delay: Long = 1, statusCode: Int = 200) {
