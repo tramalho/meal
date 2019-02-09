@@ -35,5 +35,6 @@ class DataMock {
         const val ID_MEAL: String = "ID_MEAL"
         const val INGREDIENTS: String = "INGREDIENTS"
         const val MEASURE: String = "MEASURE"
+        const val ID_ERROR : String = "Illegal argument id"
     }
 }

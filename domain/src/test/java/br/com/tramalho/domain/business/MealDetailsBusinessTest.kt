@@ -2,6 +2,7 @@ package br.com.tramalho.domain.business
 
 import br.com.tramalho.data.entity.meal.response.MealDetailResponse
 import br.com.tramalho.data.infraestructure.*
+import br.com.tramalho.data.infraestructure.DataMock.Companion.ID_ERROR
 import br.com.tramalho.data.infraestructure.DataMock.Companion.ID_MEAL
 import br.com.tramalho.data.provider.MealDetailProvider
 import io.mockk.MockKAnnotations
@@ -52,6 +53,20 @@ class MealDetailsBusinessTest {
             {
                 assertEquals(this.networkState.javaClass, UnexpectedError().javaClass)
                 assertEquals(this.data.message, ID_MEAL)
+            }
+        )
+
+    }
+
+    @Test
+    fun shouldReturnFailureEmptyID() = runBlocking {
+
+        val remoteResult = business.fetchDetails("")
+
+        remoteResult.handle({ fail() },
+            {
+                assertEquals(this.networkState.javaClass, DataNotAvailable().javaClass)
+                assertEquals(this.data.message, ID_ERROR)
             }
         )
 

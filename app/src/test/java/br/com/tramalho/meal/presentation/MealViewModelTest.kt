@@ -57,6 +57,9 @@ class MealViewModelTest {
 
     @Test
     fun shouldBeRetriveFirtAccessWithSuccess() {
+
+        viewModel.dataReceived.value = null
+
         viewModel.dataReceived.observeForever(observerSuccess)
 
         coEvery { business.fetchMealsAndCategories() } returns Success(mAc)

@@ -4,10 +4,10 @@ import br.com.tramalho.data.entity.meal.MealCategory
 import br.com.tramalho.data.entity.meal.response.MealCategoryResponse
 import br.com.tramalho.data.entity.meal.response.MealResponse
 import br.com.tramalho.data.infraestructure.*
-import br.com.tramalho.data.provider.LocalProvider
-import br.com.tramalho.data.provider.MealProvider
 import br.com.tramalho.data.infraestructure.DataMock.Companion.CATEGORY
 import br.com.tramalho.data.infraestructure.DataMock.Companion.MEAL
+import br.com.tramalho.data.provider.LocalProvider
+import br.com.tramalho.data.provider.MealProvider
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.runBlocking
@@ -69,11 +69,7 @@ class MealListBusinessTest {
 
         every { localProvider.fetchCategories() } returns listOf()
 
-        coEvery { remoteProvider.fetchCategories().await() } returns Failure(
-            Error(
-                CATEGORY
-            )
-        )
+        coEvery { remoteProvider.fetchCategories().await() } returns Failure(Error(CATEGORY))
 
         val fetchMealsCategories = business.fetchCategories()
 
