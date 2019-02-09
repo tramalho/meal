@@ -50,9 +50,7 @@ class MealDetailFragment : Fragment() {
 
         val adapter = DetailFragmentPageAdapter(childFragmentManager)
 
-        adapter.addFragment(InstructionFragment(), "Instrunction")
-        adapter.addFragment(MealListFragment(), "Tile")
-        adapter.addFragment(MealListFragment(), "Card")
+        adapter.addFragment(InstructionFragment(), getString(R.string.instrunction))
 
         viewpager.adapter = adapter
 

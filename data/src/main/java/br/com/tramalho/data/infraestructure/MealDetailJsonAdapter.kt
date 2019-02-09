@@ -50,7 +50,6 @@ class MealDetailJsonAdapter() : JsonAdapter<MealDetail>() {
                         measures.add(safeStringReturn(reader))
                     }
                     else -> {
-                        reader.skipName()
                         reader.skipValue()
                     }
 
@@ -96,7 +95,7 @@ class MealDetailJsonAdapter() : JsonAdapter<MealDetail>() {
         val scape = arrayListOf("\r", "\n")
 
         return value.split("\n")
-            .filter { !it.isEmpty() && !scape.contains(it) }
+            .filter {!scape.contains(it) }
             .map { it.replace("\r", "") }
     }
 }

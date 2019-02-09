@@ -7,44 +7,46 @@ import br.com.tramalho.meal.presentation.setup.BaseInstrumentedTest
 import br.com.tramalho.meal.presentation.setup.Constants.Companion.EMPTY_MEAL_BY_CATEGORY
 import br.com.tramalho.meal.presentation.setup.Constants.Companion.SUCCESS_CATEGORY
 import br.com.tramalho.meal.presentation.setup.Constants.Companion.SUCCESS_MEAL_BY_CATEGORY
+import br.com.tramalho.meal.presentation.setup.Constants.Companion.SUCCESS_MEAL_DETAIL
 import br.com.tramalho.meal.presentation.setup.verify
-import io.mockk.every
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest : BaseInstrumentedTest() {
+class MealDetailTest : BaseInstrumentedTest() {
 
     @get:Rule
     var activityRule: ActivityTestRule<MainActivity> =
         ActivityTestRule(MainActivity::class.java, false, false)
 
-    private val mainActivityRobot = MainActivityRobot()
+    private val mealListRobot = MealListRobot()
+    private val mealDetailRobot = MealDetailRobot()
 
     @Test
-    fun shouldShowListOfItens() {
-
-        every { localProvider.fetchCategories() } returns listOf()
+    fun shouldShowDetailStep() {
 
         setupMockWebServer(SUCCESS_CATEGORY)
 
         setupMockWebServer(SUCCESS_MEAL_BY_CATEGORY)
 
+        setupMockWebServer(SUCCESS_MEAL_DETAIL)
+
         activityRule.launchActivity(Intent())
 
         verify {
-            mainActivityRobot
+            mealListRobot
                 .waitSuccessView()
-                .matchText("BeefandMustardPie")
+                .clickFirstMeal()
+            mealDetailRobot
+                .clickInstructionsTab()
+                .checkFirstStep()
         }
     }
 
     @Test
     fun shouldShowEmptyView() {
-
-        every { localProvider.fetchCategories() } returns listOf()
 
         setupMockWebServer(SUCCESS_CATEGORY)
 
@@ -53,7 +55,7 @@ class MainActivityTest : BaseInstrumentedTest() {
         activityRule.launchActivity(Intent())
 
         verify {
-            mainActivityRobot
+            mealListRobot
                 .waitAlternativeView()
                 .withEmptyImage()
                 .withEmptyText()
@@ -64,8 +66,6 @@ class MainActivityTest : BaseInstrumentedTest() {
     @Test
     fun shouldShowErrorView() {
 
-        every { localProvider.fetchCategories() } returns listOf()
-
         setupMockWebServer(SUCCESS_CATEGORY)
 
         setupMockWebServer(EMPTY_MEAL_BY_CATEGORY, statusCode = 404)
@@ -73,7 +73,7 @@ class MainActivityTest : BaseInstrumentedTest() {
         activityRule.launchActivity(Intent())
 
         verify {
-            mainActivityRobot
+            mealListRobot
                 .waitAlternativeView()
                 .withErrorImage()
                 .withErrorText()

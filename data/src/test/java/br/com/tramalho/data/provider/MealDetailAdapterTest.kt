@@ -2,6 +2,7 @@ package br.com.tramalho.data.provider
 
 import br.com.tramalho.data.entity.meal.response.MealDetailResponse
 import br.com.tramalho.data.infraestructure.MealDetailJsonAdapter
+import br.com.tramalho.data.infraestructure.ResourceUtils
 import com.squareup.moshi.Moshi
 import org.junit.Assert.*
 import org.junit.Before
@@ -9,6 +10,8 @@ import org.junit.Test
 
 
 class MealDetailAdapterTest {
+
+    private val lastInstrunction = ""
 
     private val fullJson = "{\n" +
             "  \"meals\": [\n" +
@@ -71,6 +74,7 @@ class MealDetailAdapterTest {
 
         assertEquals("cde", mealDetail?.strInstructions!![1])
     }
+
     @Test
     fun shouldBeReturnEmptyMealDetail() {
 
@@ -81,4 +85,18 @@ class MealDetailAdapterTest {
 
         assertTrue(mealDetailResponse!!.meals.isEmpty())
     }
+
+    @Test
+    fun shouldBeReturnInstrunctionsProdBug() {
+
+        val json = ResourceUtils().openFile("meal_detail.json")
+
+        val adapter =
+            moshi.adapter(MealDetailResponse::class.java)
+
+        val mealDetailResponse = adapter.fromJson(json!!)
+
+        assertTrue(mealDetailResponse!!.meals[0].strInstructions.isNotEmpty())
+    }
+
 }
