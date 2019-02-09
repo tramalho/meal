@@ -27,21 +27,19 @@ class MealViewModel(
     private var categories: Iterator<MealCategory> = listOf<MealCategory>().iterator()
 
     fun start() {
+        //first open screen
+        if (dataReceived.value.isNullOrEmpty()) {
 
-        when (dataReceived.value.isNullOrEmpty()) {
-            //first open screen
-            true -> {
-                configVisibility(ViewState.LOADING)
-                coroutineScope.launch {
-                    val resource = mealListBusiness.fetchMealsAndCategories()
-                    resource.handle(success(), failure())
-                }
+            configVisibility(ViewState.LOADING)
+            coroutineScope.launch {
+                val resource = mealListBusiness.fetchMealsAndCategories()
+                resource.handle(success(), failure())
             }
-            //back from details
-            else -> {
-                dataReceived.value = dataReceived.value
-                configVisibility(ViewState.SUCCESS)
-            }
+        }
+        //back from details
+        else {
+            dataReceived.value = dataReceived.value
+            configVisibility(ViewState.SUCCESS)
         }
     }
 
@@ -63,19 +61,17 @@ class MealViewModel(
 
         val result = this.data.meals
 
-        when (result.isNotEmpty()) {
+        if (result.isNotEmpty()) {
 
-            true -> {
-                categories = this.data.categories.iterator()
-                categories.next()
+            categories = this.data.categories.iterator()
+            categories.next()
 
-                configureType(data.meals)
+            configureType(result)
 
-                addValue(data.meals)
-                configVisibility(ViewState.SUCCESS)
-            }
-
-            else -> configVisibility(ViewState.NO_DATA)
+            addValue(result)
+            configVisibility(ViewState.SUCCESS)
+        } else {
+            configVisibility(ViewState.NO_DATA)
         }
     }
 

@@ -5,17 +5,20 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import br.com.tramalho.data.entity.meal.Meal
 import br.com.tramalho.data.entity.meal.MealsAndCategories
-import br.com.tramalho.data.infraestructure.*
+import br.com.tramalho.data.infraestructure.DataMock
 import br.com.tramalho.data.infraestructure.DataMock.Companion.CATEGORY
+import br.com.tramalho.data.infraestructure.DataNotAvailable
+import br.com.tramalho.data.infraestructure.Failure
+import br.com.tramalho.data.infraestructure.Success
 import br.com.tramalho.domain.business.MealListBusiness
 import br.com.tramalho.meal.data.infraestructure.UI
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
 
 
 class MealViewModelTest {
@@ -25,6 +28,9 @@ class MealViewModelTest {
 
     @MockK(relaxUnitFun = true)
     private lateinit var observerSuccess: Observer<List<Meal>>
+
+    @MockK(relaxUnitFun = true)
+    private lateinit var observerVisibility: Observer<Int>
 
     @MockK(relaxUnitFun = true)
     private lateinit var observerError: Observer<Int>
@@ -50,7 +56,7 @@ class MealViewModelTest {
     }
 
     @Test
-    fun shouldBeRetriveFirtAccessWithSuccees() = runBlocking {
+    fun shouldBeRetriveFirtAccessWithSuccess() {
         viewModel.dataReceived.observeForever(observerSuccess)
 
         coEvery { business.fetchMealsAndCategories() } returns Success(mAc)
@@ -61,18 +67,35 @@ class MealViewModelTest {
     }
 
     @Test
-    fun shouldBeRetriveFirstAccessWithError() = runBlocking {
+    fun shouldBeSuccessWithPreviousData() {
+
+        viewModel.dataReceived.value = arrayListOf(meal)
+
+        viewModel.listVisibility.observeForever(observerVisibility)
+
+        viewModel.start()
+
+        coVerify(exactly = 0) { business.fetchMealsByCategory(anyString()) }
+
+        verify(exactly = 1) { observerVisibility.onChanged(VISIBLE) }
+    }
+
+
+    @Test
+    fun shouldBeRetriveFirstAccessWithError() {
         viewModel.alternativePageVisibility.observeForever(observerError)
 
         coEvery { business.fetchMealsAndCategories() } returns Failure(Error(), DataNotAvailable())
 
         viewModel.start()
 
-        verify(exactly = 1) { observerError.onChanged(VISIBLE) }
+        viewModel.tryAgain()
+
+        verify(exactly = 2) { observerError.onChanged(VISIBLE) }
     }
 
     @Test
-    fun shouldBeRetriveFetchMealsSuccess() = runBlocking {
+    fun shouldBeRetriveFetchMealsSuccess() {
 
         viewModel.dataReceived.observeForever(observerSuccess)
 
@@ -90,7 +113,7 @@ class MealViewModelTest {
     }
 
     @Test
-    fun shouldNotExecuteWithoutCategories() = runBlocking {
+    fun shouldNotExecuteWithoutCategories()  {
 
         viewModel.dataReceived.observeForever(observerSuccess)
 
