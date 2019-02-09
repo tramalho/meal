@@ -1,10 +1,10 @@
 package br.com.tramalho.meal.presentation
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 
-private class EndlessRecyclerOnScrollListener(val onLoadMore: () -> Unit) : RecyclerView.OnScrollListener() {
+class EndlessRecyclerOnScrollListener(val onLoadMore: () -> Unit) : RecyclerView.OnScrollListener() {
 
     private var mPreviousTotal = 1
     private var mLoading = true
@@ -35,8 +35,4 @@ private class EndlessRecyclerOnScrollListener(val onLoadMore: () -> Unit) : Recy
             mLoading = true
         }
     }
-}
-
-fun RecyclerView.loadMore(onLoadMore: () -> Unit){
-    this.addOnScrollListener(EndlessRecyclerOnScrollListener(onLoadMore))
 }

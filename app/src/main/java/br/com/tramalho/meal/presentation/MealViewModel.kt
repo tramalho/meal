@@ -8,27 +8,38 @@ import br.com.tramalho.data.entity.meal.MealCategory
 import br.com.tramalho.data.entity.meal.MealsAndCategories
 import br.com.tramalho.data.infraestructure.Failure
 import br.com.tramalho.data.infraestructure.Success
-import br.com.tramalho.data.infraestructure.UI
 import br.com.tramalho.data.infraestructure.handle
 import br.com.tramalho.domain.business.MealListBusiness
 import br.com.tramalho.meal.presentation.ListStatus.Companion.HEADER
 import br.com.tramalho.meal.presentation.ListStatus.Companion.ITEM
-import br.com.tramalho.meal.utilities.SingleLiveEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class MealViewModel(private val mealListBusiness: MealListBusiness, application: Application, protected val coroutineScope: CoroutineScope = UI) : BaseViewModel(application) {
+class MealViewModel(
+    private val mealListBusiness: MealListBusiness,
+    application: Application,
+    private val coroutineScope: CoroutineScope
+) : BaseViewModel(application) {
 
-    val dataReceived: SingleLiveEvent<List<Meal>> = SingleLiveEvent()
+    val dataReceived: MutableLiveData<ArrayList<Meal>> = MutableLiveData()
     val listVisibility = MutableLiveData<Int>().apply { value = GONE }
 
     private var categories: Iterator<MealCategory> = listOf<MealCategory>().iterator()
 
     fun start() {
-        configVisibility(ViewState.LOADING)
-        coroutineScope.launch {
-            val resource = mealListBusiness.fetchMealsAndCategories()
-            resource.handle(success(), failure())
+        //first open screen
+        if (dataReceived.value.isNullOrEmpty()) {
+
+            configVisibility(ViewState.LOADING)
+            coroutineScope.launch {
+                val resource = mealListBusiness.fetchMealsAndCategories()
+                resource.handle(success(), failure())
+            }
+        }
+        //back from details
+        else {
+            dataReceived.value = dataReceived.value
+            configVisibility(ViewState.SUCCESS)
         }
     }
 
@@ -37,7 +48,7 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, application:
             if (categories.hasNext()) {
                 val mealCategory = categories.next()
                 mealListBusiness.fetchMealsByCategory(mealCategory.strCategory)
-                    .handle(mealSucess(), failure())
+                    .handle(mealSuccess(), failure())
             }
         }
     }
@@ -50,19 +61,17 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, application:
 
         val result = this.data.meals
 
-        when (result.isNotEmpty()) {
+        if (result.isNotEmpty()) {
 
-            true -> {
-                categories = this.data.categories.iterator()
-                categories.next()
+            categories = this.data.categories.iterator()
+            categories.next()
 
-                configureType(data.meals)
+            configureType(result)
 
-                dataReceived.value = data.meals
-                configVisibility(ViewState.SUCCESS)
-            }
-
-            false -> configVisibility(ViewState.NO_DATA)
+            addValue(result)
+            configVisibility(ViewState.SUCCESS)
+        } else {
+            configVisibility(ViewState.NO_DATA)
         }
     }
 
@@ -74,16 +83,29 @@ class MealViewModel(private val mealListBusiness: MealListBusiness, application:
         listVisibility.value = result.showData
     }
 
-    private fun mealSucess(): Success<List<Meal>>.() -> Unit {
+    private fun mealSuccess(): Success<List<Meal>>.() -> Unit {
         return {
             configureType(this.data)
-            dataReceived.value = data
+            addValue(this.data)
         }
+    }
+
+    private fun addValue(data: List<Meal>) {
+
+        val mergeData = ArrayList<Meal>()
+
+        dataReceived.value?.let {
+            mergeData.addAll(dataReceived.value as ArrayList)
+        }
+
+        mergeData.addAll(data)
+
+        dataReceived.value = mergeData
     }
 
     private fun configureType(data: List<Meal>) {
 
-        if(data.isNotEmpty()) {
+        if (data.isNotEmpty()) {
 
             data.forEach { it.type = ITEM }
 

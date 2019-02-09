@@ -22,12 +22,9 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
 
             val response = mealProvider.fetchCategories().await()
 
-            when (response) {
-                is Success -> {
-                    result = configCategoryResponse(response)
-                }
-                is Failure ->
-                    result = Failure(response.data, response.networkState)
+            result = when (response) {
+                is Success -> configCategoryResponse(response)
+                is Failure -> Failure(response.data, response.networkState)
             }
         }
 
@@ -38,9 +35,9 @@ class MealListBusiness(private val localProvider: LocalProvider, private val mea
 
         val categories = response.data.categories
 
-        return when (categories.isNullOrEmpty()) {
-            true -> Failure(Error())
-            false -> {
+        return when {
+            categories.isEmpty() -> Failure(Error("Category Not Available"))
+            else -> {
                 localProvider.saveCategories(response.data.categories)
                 Success(response.data.categories)
             }
