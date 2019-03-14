@@ -5,6 +5,12 @@ node {
         sh 'cd fastlane'
     }
     stage('build') {
-        sh 'fastlane buildApp'
+        sh 'bundle exec fastlane buildApp'
+    }
+    stage('Static Analyze') {
+        sh 'bundle exec fastlane staticAnalyze'
+    }
+    stage('Test and Coverage') {
+        sh 'bundle exec fastlane testAndCoverage'
     }
  }
