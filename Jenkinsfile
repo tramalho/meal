@@ -9,17 +9,23 @@ node {
     }
     stage('Static Analyze') {
         sh 'fastlane staticAnalyze'
+        publishReport('build/reports', 'lint-results-debug.html', 'Lint Report')
     }
+
     stage('Test and Coverage') {
         sh 'fastlane testAndCoverage'
-       // publish html
+
+       publishReport('build/result_report', 'index.html', 'Unified Report')
+    }
+
+    def publishReport(reportDirectory, reportFileName, reportName) {
        publishHTML target: [
            allowMissing: false,
            alwaysLinkToLastBuild: false,
            keepAll: true,
-           reportDir: 'build/result_report',
-           reportFiles: 'index.html',
-           reportName: 'Unified Report'
+           reportDir: reportDirectory,
+           reportFiles: reportFileName,
+           reportName: reportName
        ]
     }
  }

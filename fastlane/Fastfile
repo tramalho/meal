@@ -61,7 +61,7 @@ platform :android do
 
     desc "Run Test And Coverage"
   lane :testAndCoverage do
-    # automation_integrationTests
+    automation_integrationTests
     gradle(task: "jacocoTestReport")
   end
 
