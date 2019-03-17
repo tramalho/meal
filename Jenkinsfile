@@ -12,11 +12,6 @@ node {
     }
     stage('Test and Coverage') {
         sh 'fastlane testAndCoverage'
-        post {
-            always {
-                junit '**/result_report/*.html'
-
-            }
-        }
+        junit '**/result_report/*.html'
     }
  }
