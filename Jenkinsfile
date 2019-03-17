@@ -17,15 +17,15 @@ node {
 
        publishReport('build/result_report', 'index.html', 'Unified Report')
     }
+ }
 
     def publishReport(reportDirectory, reportFileName, reportName) {
-       publishHTML target: [
-           allowMissing: false,
-           alwaysLinkToLastBuild: false,
-           keepAll: true,
-           reportDir: reportDirectory,
-           reportFiles: reportFileName,
-           reportName: reportName
-       ]
+        publishHTML target: [
+        allowMissing: false,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: reportDirectory,
+        reportFiles: reportFileName,
+        reportName: reportName
+        ]
     }
- }
