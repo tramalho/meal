@@ -12,6 +12,14 @@ node {
     }
     stage('Test and Coverage') {
         sh 'fastlane testAndCoverage'
-        junit '**/result_report/*.html'
+       // publish html
+       publishHTML target: [
+           allowMissing: false,
+           alwaysLinkToLastBuild: false,
+           keepAll: true,
+           reportDir: 'coverage',
+           reportFiles: 'index.html',
+           reportName: 'Unified Report'
+       ]
     }
  }
