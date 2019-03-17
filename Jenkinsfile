@@ -4,7 +4,7 @@ node {
         checkout scm
         sh 'cd fastlane'
     }
-    stage('build') {
+    stage('Build') {
         sh 'fastlane buildApp'
     }
     stage('Static Analyze') {
