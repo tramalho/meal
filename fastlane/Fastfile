@@ -63,6 +63,7 @@ platform :android do
   lane :testAndCoverage do
     automation_integrationTests
     gradle(task: "jacocoTestReport")
+    junit '**/reports/test/**/*.xml'
   end
 
 
