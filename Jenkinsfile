@@ -17,7 +17,7 @@ node {
            allowMissing: false,
            alwaysLinkToLastBuild: false,
            keepAll: true,
-           reportDir: 'result_report',
+           reportDir: '',
            reportFiles: 'index.html',
            reportName: 'Unified Report'
        ]
