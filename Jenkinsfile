@@ -12,5 +12,6 @@ node {
     }
     stage('Test and Coverage') {
         sh 'fastlane testAndCoverage'
+        junit '**/reports/test/**/*.xml'
     }
  }
