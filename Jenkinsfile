@@ -9,7 +9,7 @@ node {
     }
     stage('Static Analyze') {
         sh 'fastlane staticAnalyze'
-        publishReport('build/reports', 'lint-results-debug.html', 'Lint Report')
+        publishReport('app/build/reports', 'lint-results-debug.html', 'Lint Report')
     }
 
     stage('Test and Coverage') {
