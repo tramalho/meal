@@ -14,7 +14,8 @@ node {
 
     stage('Test and Coverage') {
         sh 'fastlane testAndCoverage'
-        junit '**/test-results/test/*.xml'
+        # junit '**/test-results/test/*.xml'
+        junit '**/build/test-results/**/*.xml'
         publishReport('build/result_report', 'index.html', 'Unified Report')
     }
  }
