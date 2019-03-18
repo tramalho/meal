@@ -7,15 +7,15 @@ node {
     stage('Build') {
         sh 'fastlane buildApp'
     }
-    stage('Static Analyze') {
+    stage('Lint Analyze') {
         sh 'fastlane staticAnalyze'
-        publishReport('app/build/reports', 'lint-results-debug.html', 'Lint Report')
+        androidLint pattern: '**/lint-results*.xml'
     }
 
     stage('Test and Coverage') {
         sh 'fastlane testAndCoverage'
-
-       publishReport('build/result_report', 'index.html', 'Unified Report')
+        junit '**/test-results/test/*.xml'
+        publishReport('build/result_report', 'index.html', 'Unified Report')
     }
  }
 
