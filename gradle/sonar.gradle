@@ -1,0 +1,15 @@
+apply plugin: 'org.sonarqube'
+
+sonarqube {
+
+    properties {
+        property "sonar.host.url", "http://localhost:9000/"
+        property "sonar.sourceEncoding", "UTF-8"
+
+        property "sonar.sources", "/src/main/java"
+        property "sonar.binaries", "*/build/tmp/kotlin-classes"
+        property "sonar.exclusions", "**/res/**, **/*.xml"
+        // depends execution jacocoTestReport task [coverage.gradle]
+        property "sonar.coverage.jacoco.xmlReportPaths", "${rootProject.buildDir}/result_report/report.xml"
+    }
+}

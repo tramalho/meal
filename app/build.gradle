@@ -6,8 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-apply from: rootProject.file("gradle/coverage.gradle")
-
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
