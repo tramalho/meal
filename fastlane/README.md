@@ -56,6 +56,11 @@ Build
 fastlane android testAndCoverage
 ```
 Run Test And Coverage
+### android qualityGate
+```
+fastlane android qualityGate
+```
+Quality Gate
 ### android pipeline
 ```
 fastlane android pipeline
