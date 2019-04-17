@@ -11,14 +11,12 @@ node {
         sh 'fastlane staticAnalyze'
         androidLint pattern: '**/lint-results*.xml'
     }
-
     stage('Test and Coverage') {
         sh 'fastlane testAndCoverage'
         // junit '**/test-results/test/*.xml'
         junit '**/build/test-results/**/*.xml'
         publishReport('build/result_report', 'index.html', 'Unified Report')
     }
-
     stage('SonarQube analysis') {
         withSonarQubeEnv('My SonarQube Server') {
         // requires SonarQube Scanner for Gradle 2.1+
