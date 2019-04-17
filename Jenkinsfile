@@ -11,16 +11,14 @@ node {
         sh 'fastlane staticAnalyze'
         androidLint pattern: '**/lint-results*.xml'
     }
+
     stage('Test and Coverage') {
         sh 'fastlane testAndCoverage'
         // junit '**/test-results/test/*.xml'
         junit '**/build/test-results/**/*.xml'
         publishReport('build/result_report', 'index.html', 'Unified Report')
     }
-    stage('SonarQube analysis') {
-        sh './gradlew --info sonarqube'
-    }
-}
+ }
 
     def publishReport(reportDirectory, reportFileName, reportName) {
         publishHTML target: [
