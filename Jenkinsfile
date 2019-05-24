@@ -2,8 +2,11 @@ node {
     stage('Checkout') {
         deleteDir()
         checkout scm
-        sh 'cd fastlane'
     }
+    stage('Config Env') {
+        sh 'gem install fastlane'
+        sh 'cd fastlane'
+    }    
     stage('Build') {
         sh 'fastlane buildApp'
     }
