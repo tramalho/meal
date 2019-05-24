@@ -4,7 +4,7 @@ node {
         checkout scm
     }
     stage('Config Env') {
-        sh 'sudo gem install fastlane -NV'
+       // sh 'sudo gem install fastlane -NV'
         sh 'cd fastlane'
     }    
     stage('Build') {
