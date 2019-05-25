@@ -9,14 +9,15 @@ node {
         sh 'cd fastlane'
     }    
     stage('Build') {
+        sh 'sudo bundle install'
         sh 'bundle exec fastlane buildApp'
     }
     stage('Lint Analyze') {
-        sh 'fastlane staticAnalyze'
+        sh 'bundle exec fastlane staticAnalyze'
         androidLint pattern: '**/lint-results*.xml'
     }
     stage('Test and Coverage') {
-        sh 'fastlane testAndCoverage'
+        sh 'bundle exec fastlane testAndCoverage'
         // junit '**/test-results/test/*.xml'
         junit '**/build/test-results/**/*.xml'
         publishReport('build/result_report', 'index.html', 'Unified Report')
