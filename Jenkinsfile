@@ -1,3 +1,5 @@
+#!/bin/bash -l
+
 node {
     stage('Checkout') {
         deleteDir()
