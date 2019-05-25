@@ -9,6 +9,7 @@ node {
         sh 'cd fastlane'
     }    
     stage('Build') {
+        sh 'sudo gem update --system'
         sh 'sudo gem uninstall fastlane'
         sh 'bundle install'
         sh 'bundle exec fastlane buildApp'
