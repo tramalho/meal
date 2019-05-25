@@ -4,11 +4,12 @@ node {
         checkout scm
     }
     stage('Config Env') {
-        //sh 'gem install fastlane'
+        sh 'bundle install'
+        sh 'gem install fastlane'
         sh 'cd fastlane'
     }    
     stage('Build') {
-        sh 'fastlane buildApp'
+        sh 'bundle exec fastlane buildApp'
     }
     stage('Lint Analyze') {
         sh 'fastlane staticAnalyze'
