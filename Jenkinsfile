@@ -9,7 +9,7 @@ node {
         sh 'cd fastlane'
     }    
     stage('Build') {
-        sh 'bundler exec fastlane buildApp'
+        sh 'bundle exec fastlane buildApp'
     }
     stage('Lint Analyze') {
         sh 'fastlane staticAnalyze'
