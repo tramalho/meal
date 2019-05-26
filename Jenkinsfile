@@ -9,9 +9,9 @@ node {
         sh 'cd fastlane'
     }    
     stage('Build') {
-        sh 'sudo gem update --system'
-        sh "gem install unf_ext -v '0.0.7.6' --source https://rubygems.org/"
-        sh 'sudo gem uninstall fastlane'
+//        sh 'sudo gem update --system'
+//        sh "gem install unf_ext -v '0.0.7.6' --source https://rubygems.org/"
+//        sh 'sudo gem uninstall fastlane'
         sh 'bundle install'
         sh 'bundle exec fastlane buildApp'
     }
