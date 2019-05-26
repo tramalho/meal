@@ -13,7 +13,7 @@ node {
 //        sh "gem install unf_ext -v '0.0.7.6' --source https://rubygems.org/"
 //        sh 'sudo gem uninstall fastlane'
 //        sh 'bundle update --bundler'        
-//        sh 'bundle install'
+        sh 'bundle install'
         sh 'bundle exec fastlane buildApp'
     }
     stage('Lint Analyze') {
