@@ -12,7 +12,7 @@ node {
 //        sh 'sudo gem update --system'
 //        sh "gem install unf_ext -v '0.0.7.6' --source https://rubygems.org/"
 //        sh 'sudo gem uninstall fastlane'
-//        sh 'bundle update --bundler'        
+        sh 'gem install bundler'        
         sh 'bundle install'
         sh 'bundle exec fastlane buildApp'
     }
