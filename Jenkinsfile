@@ -5,12 +5,18 @@ pipeline {
     agent none
 
     stages {
-        stage('Build') {
-            agent { label 'slave-node​' }
+        stage('Checkout') {
+            agent { label 'slave-01' }
             steps {
-                echo 'Building..'
-                sh '''
-                '''
+                deleteDir()
+                checkout scm
+            }
+        }
+        stage('Config Env') {
+            agent { label 'slave-01' }
+            steps {
+                sh 'cd fastlane'
+                sh 'bundle install'
             }
         }
     }
