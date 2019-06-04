@@ -1,6 +1,6 @@
 #!/bin/bash --login
 
-piprline {
+pipeline {
     stage('Checkout') {
          agent { label 'slave-01' }
         deleteDir()
