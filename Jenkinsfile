@@ -1,42 +1,24 @@
 #!/bin/bash --login
 
+
 pipeline {
-  stages {
-    stage('Checkout') {
-         agent { label 'slave-01' }
-        deleteDir()
-        checkout scm
+    agent none
+
+    stages {
+        stage('Build') {
+            agent { label 'slave-node​' }
+            steps {
+                echo 'Building..'
+                sh '''
+                '''
+            }
+        }
     }
-    stage('Config Env') {
-        sh 'cd fastlane'
-        sh 'bundle install'
-    }    
-    stage('Build') {
-        sh 'bundle exec fastlane buildApp'
+
+    post {
+        success {
+            echo 'This will run only if successful'
+        }
     }
-    stage('Lint Analyze') {
-        sh 'bundle exec fastlane staticAnalyze'
-        androidLint pattern: '**/lint-results*.xml'
-    }
-    stage('Test and Coverage') {
-        sh 'bundle exec fastlane testAndCoverage'
-        // junit '**/test-results/test/*.xml'
-        junit '**/build/test-results/**/*.xml'
-        publishReport('build/result_report', 'index.html', 'Unified Report')
-    }
-    stage('SonarQube analysis') {
-        sh './gradlew --info sonarqube'
-    }
-  }
 }
 
-    def publishReport(reportDirectory, reportFileName, reportName) {
-        publishHTML target: [
-        allowMissing: false,
-        alwaysLinkToLastBuild: false,
-        keepAll: true,
-        reportDir: reportDirectory,
-        reportFiles: reportFileName,
-        reportName: reportName
-        ]
-    }
