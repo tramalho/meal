@@ -1,6 +1,7 @@
 #!/bin/bash --login
 
 pipeline {
+  stages {
     stage('Checkout') {
          agent { label 'slave-01' }
         deleteDir()
@@ -26,6 +27,7 @@ pipeline {
     stage('SonarQube analysis') {
         sh './gradlew --info sonarqube'
     }
+  }
 }
 
     def publishReport(reportDirectory, reportFileName, reportName) {
