@@ -1,7 +1,8 @@
 #!/bin/bash --login
 
-node {
+piprline {
     stage('Checkout') {
+         agent { label 'slave-01' }
         deleteDir()
         checkout scm
     }
