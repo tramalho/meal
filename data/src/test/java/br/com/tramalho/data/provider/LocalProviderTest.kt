@@ -14,17 +14,17 @@ import java.lang.reflect.Type
 
 class LocalProviderTest {
 
-    private var moshi = Moshi.Builder().build()
+    var moshi = Moshi.Builder().build()
 
     @MockK(relaxUnitFun = true)
-    private lateinit var mockSharedPref: SharedPreferences
+    lateinit var mockSharedPref: SharedPreferences
 
     @MockK(relaxUnitFun = true)
-    private lateinit var mockSharedEditor: SharedPreferences.Editor
+    lateinit var mockSharedEditor: SharedPreferences.Editor
 
-    private lateinit var localProvider: LocalProvider
+    lateinit var localProvider: LocalProvider
 
-    private var data : String = "[{}]"
+    var data : String = "[{}]"
 
     @Before
     fun setup() {

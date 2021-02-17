@@ -17,12 +17,12 @@ import org.junit.Test
 
 class MealDetailsBusinessTest {
 
-    private lateinit var business: MealDetailBusiness
+    lateinit var business: MealDetailBusiness
 
     @MockK(relaxUnitFun = true)
-    private lateinit var remoteProvider: MealDetailProvider
+    lateinit var remoteProvider: MealDetailProvider
 
-    private val successResult = DataMock.createMealDetail()
+    val successResult = DataMock.createMealDetail()
 
     @Before
     fun setup() {

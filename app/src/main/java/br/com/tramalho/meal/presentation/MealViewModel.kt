@@ -38,7 +38,7 @@ class MealViewModel(
         }
         //back from details
         else {
-            dataReceived.value = dataReceived.value
+            this.dataReceived.value = dataReceived.value
             configVisibility(ViewState.SUCCESS)
         }
     }

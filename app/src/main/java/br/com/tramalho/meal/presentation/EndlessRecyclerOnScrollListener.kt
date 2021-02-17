@@ -17,13 +17,12 @@ class EndlessRecyclerOnScrollListener(val onLoadMore: () -> Unit) : RecyclerView
 
         val visibleItemCount = recyclerView.childCount
         val totalItemCount = recyclerView.layoutManager?.getItemCount()
-        val firstVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+        val firstVisibleItem =
+            (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
 
-        if (mLoading) {
-            if (totalItemCount!! > mPreviousTotal) {
-                mLoading = false
-                mPreviousTotal = totalItemCount
-            }
+        if (mLoading && (totalItemCount!! > mPreviousTotal)) {
+            mLoading = false
+            mPreviousTotal = totalItemCount
         }
 
         val visibleThreshold = 5
